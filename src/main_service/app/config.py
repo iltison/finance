@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -17,9 +17,18 @@ class DBConfig:
     password: str = "admin"
 
 
+@dataclass
+class Config:
+    database: DBConfig = field(default_factory=DBConfig)
+
+
 def get_web_config() -> WebConfig:
     return WebConfig()
 
 
 def get_db_config() -> DBConfig:
     return DBConfig()
+
+
+def get_config() -> Config:
+    return Config()

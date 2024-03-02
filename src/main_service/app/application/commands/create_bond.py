@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 
-from structlog import get_logger
+import structlog
 
 from main_service.app.adapters.bond_repo import BondRepoInterface
-from main_service.app.adapters.UOW import UOWInterface
+from main_service.app.adapters.unit_of_work import UOWInterface
+from main_service.app.application.commands.command import CommandResult
 from main_service.app.domain.bond import Bond
-from main_service.app.domain.exeption import ValueExist
+from main_service.app.domain.exeption import ValueExistError
 
-logger = get_logger()
+logger = structlog.get_logger("service")
 
 
 @dataclass
@@ -15,11 +16,18 @@ class CreateBondCommand:
     name: str
 
 
-def create_bond(repo: BondRepoInterface, uow: UOWInterface, command: CreateBondCommand):
-    with uow:
-        bond = repo.get(command.name)
+class CreateBondService:
+    def __init__(self, uow: UOWInterface, repo: BondRepoInterface):
+        self.__uow = uow
+        self.__repo = repo
 
-        if bond is None:
-            raise ValueExist(f"Облигация с именем {command.name} существует")
-
-        repo.add(Bond(name=command.name))
+    async def execute(self, command: CreateBondCommand) -> CommandResult:
+        structlog.contextvars.bind_contextvars(bond_name=command.name)
+        async with self.__uow:
+            bond = await self.__repo.get(command.name)
+            if bond is not None:
+                logger.debug("Bond exist")
+                return CommandResult().failed(exception=ValueExistError(f"Bond {command.name} exist "))
+            await self.__repo.add(Bond(name=command.name))
+        logger.info("Bond created")
+        return CommandResult().ok()

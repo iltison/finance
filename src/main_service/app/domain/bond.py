@@ -1,10 +1,16 @@
+import enum
 from dataclasses import dataclass, field
 from datetime import date
 
 
+class BondType(enum.Enum):
+    purchase = "purchase"
+    sell = "sell"
+
+
 @dataclass
 class BondOperation:
-    type: str
+    type: BondType
     date: date
     price: float
 

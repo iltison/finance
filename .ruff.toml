@@ -1,0 +1,34 @@
+line-length = 120
+target-version="py311"
+src = ["src"]
+
+include = ["src/main_service/**.py"]
+exclude = ["src/main_service/migration/**.py"]
+
+lint.select = [
+"I"
+]
+lint.ignore = [
+   "ARG",
+   "ANN",
+   "D",
+   "EM101",
+   "EM102",
+   "PT001",
+   "PT023",
+   "SIM108",
+   "SIM114",
+   "TRY003",
+   "PLW2901",
+   "RET505",
+   "PLR0913",
+]
+
+[lint.per-file-ignores]
+"src/main_service/tests/**" = ["TID252", "PLR2004", "S101"]
+
+[lint.isort]
+no-lines-before = ["local-folder"]
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "parents"

@@ -1,23 +1,40 @@
 from typing import Protocol
 
-from structlog import get_logger
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from main_service.app.domain.bond import Bond
 
-logger = get_logger()
-
 
 class BondRepoInterface(Protocol):
-    def get(self, name: str):
-        ...
+    async def get(self, name: str) -> Bond | None: ...
 
-    def add(self, entity: Bond):
-        ...
+    async def add(self, entity: Bond): ...
 
 
 class BondRepoDatabase:
-    def get(self, name: str):
-        logger.info(f"get bond with name {name}")
+    def __init__(self, session: AsyncSession):
+        self.__session = session
 
-    def add(self, entity: Bond):
-        logger.info(f"add bond with name {entity.name}")
+    async def get(self, name: str) -> Bond | None:
+        result = list(
+            await self.__session.execute(
+                text("""SELECT * FROM bonds where name = :name"""),
+                {"name": name},
+            ),
+        )
+        if len(result) == 0:
+            return None
+
+        return Bond(name=result[0][1])
+
+    async def add(self, entity: Bond):
+        await self.__session.execute(
+            text(
+                """
+            INSERT INTO bonds (name)
+            VALUES (:name);
+            """,
+            ),
+            {"name": entity.name},
+        )

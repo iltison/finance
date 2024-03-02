@@ -21,7 +21,10 @@ dependencies = [
     "uvicorn==0.22.*",
     "alembic",
     "psycopg2",
-    "structlog"
+    "structlog",
+    "punq",
+    "asyncpg",
+    "requests",
 ]
 [project.optional-dependencies]
 test = [
