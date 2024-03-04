@@ -5,9 +5,6 @@ src = ["src"]
 include = ["src/main_service/**.py"]
 exclude = ["src/main_service/migration/**.py"]
 
-lint.select = [
-"I"
-]
 lint.ignore = [
    "ARG",
    "ANN",

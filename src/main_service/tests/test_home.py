@@ -1,5 +1,4 @@
 import pytest
-from blacksheep.testing import TestClient
 
 from main_service.tests.conftest import ClientSession
 

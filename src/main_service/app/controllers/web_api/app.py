@@ -4,7 +4,6 @@ import structlog
 from blacksheep import Application, Router
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from main_service.app.config import Config
 from main_service.app.controllers.web_api.routes.bond import bond_router
 from main_service.app.controllers.web_api.routes.home import home_router
 from main_service.app.di.container import get_container

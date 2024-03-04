@@ -2,23 +2,16 @@ import asyncio
 import os
 import random
 import string
-from collections.abc import AsyncIterator
 from multiprocessing import Process
-from time import sleep
-from typing import Awaitable, Callable
 from urllib.parse import urljoin
 
 import aiohttp
 import psycopg2
 import pytest
 import pytest_asyncio
-import uvicorn
-from blacksheep import Application
-from blacksheep.testing import TestClient
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from sqlalchemy.ext.asyncio import AsyncEngine
 
-from main_service.app.config import Config, get_config
+from main_service.app.config import get_config
 from main_service.app.controllers.web_api.app import application_factory
 from main_service.app.main import run
 

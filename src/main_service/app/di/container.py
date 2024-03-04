@@ -1,5 +1,5 @@
 from rodi import Container
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.orm import sessionmaker
 
 from main_service.app.adapters.bond_repo import BondRepoInterface
