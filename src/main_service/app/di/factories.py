@@ -1,5 +1,5 @@
 from rodi import ActivationScope
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from main_service.app.adapters.bond_repo import BondRepoDatabase, BondRepoInterface
@@ -13,12 +13,13 @@ def build_sa_engine(context: ActivationScope) -> AsyncEngine:
 
     return create_async_engine(
         f"postgresql+asyncpg://{config.database.login}:{config.database.password}@{config.database.host}:{config.database.port}/{config.database.database}",
+        echo=True,
     )
 
 
-def build_sa_sessionmaker(context: ActivationScope) -> sessionmaker:
+def build_sa_sessionmaker(context: ActivationScope) -> async_sessionmaker:
     engine = context.provider.get(AsyncEngine)
-    return sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    return async_sessionmaker(engine, expire_on_commit=False)
 
 
 def build_uow(context: ActivationScope) -> UOWInterface:

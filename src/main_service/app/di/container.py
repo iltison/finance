@@ -1,5 +1,5 @@
 from rodi import Container
-from sqlalchemy.ext.asyncio import AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from main_service.app.adapters.bond_repo import BondRepoInterface
@@ -16,7 +16,7 @@ from main_service.app.di.factories import (
 
 
 def get_container() -> Container:
-    container = Container()
+    container: Container = Container()
 
     container.add_singleton_by_factory(get_config, Config)
     container.add_singleton_by_factory(build_sa_engine, AsyncEngine)

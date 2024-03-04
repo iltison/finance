@@ -3,7 +3,7 @@ import sys
 
 import uvicorn
 
-from main_service.app.config import get_web_config
+from main_service.app.config import Config, get_config, get_web_config
 from main_service.app.controllers.web_api.app import application_factory
 
 
@@ -15,7 +15,7 @@ def get_logger():
     )
 
 
-def start_service():
+def run():
     get_logger()
     web_config = get_web_config()
 
@@ -28,4 +28,4 @@ def start_service():
 
 
 if __name__ == "__main__":
-    start_service()
+    run()

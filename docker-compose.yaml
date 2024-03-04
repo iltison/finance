@@ -2,24 +2,24 @@ version: '3.5'
 
 services:
   postgres:
-    container_name: postgres_finance
     image: postgres
+    command: postgres -c 'max_connections=1000'
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      PGDATA: /data/postgres
-    volumes:
-       - postgres:/data/postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_MULTIPLE_DATABASES: reference
+    healthcheck:
+      test: pg_isready --username "postgres" --dbname "reference"
+      interval: 1s
+      retries: 5
+      timeout: 5s
     ports:
       - "5432:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-
-networks:
-  postgres:
-    driver: bridge
+    volumes:
+      - ./docker-multiple-databases.sh:/docker-entrypoint-initdb.d/docker-multiple-databases.sh:ro
+    tmpfs:
+      - /var/lib/postgresql/data:rw # Necessary to speed up integration tests.
 
 volumes:
     postgres:

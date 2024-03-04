@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, field
 
 
@@ -13,8 +14,8 @@ class DBConfig:
     host: str = "localhost"
     port: int = 5432
     database: str = "postgres"
-    login: str = "admin"
-    password: str = "admin"
+    login: str = "postgres"
+    password: str = "postgres"
 
 
 @dataclass
@@ -31,4 +32,7 @@ def get_db_config() -> DBConfig:
 
 
 def get_config() -> Config:
-    return Config()
+    config = Config()
+    database = os.getenv("DB_DATABASE", config.database.database)
+    config.database.database = database
+    return config

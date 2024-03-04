@@ -1,29 +1,112 @@
 import asyncio
+import os
+import random
+import string
 from collections.abc import AsyncIterator
+from multiprocessing import Process
+from time import sleep
+from typing import Awaitable, Callable
+from urllib.parse import urljoin
 
+import aiohttp
+import psycopg2
 import pytest
 import pytest_asyncio
+import uvicorn
 from blacksheep import Application
 from blacksheep.testing import TestClient
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from sqlalchemy.ext.asyncio import AsyncEngine
 
+from main_service.app.config import Config, get_config
 from main_service.app.controllers.web_api.app import application_factory
+from main_service.app.main import run
+
+
+def generate_random_name():
+    length = 10
+    letters = string.ascii_lowercase
+    return "".join(random.choice(letters) for i in range(length))
+
+
+def create_database(name):
+    config = get_config()
+    conn = psycopg2.connect(
+        database="reference",
+        user=config.database.login,
+        password=config.database.password,
+        host=config.database.host,
+        port=config.database.port,
+    )
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    try:
+        sql = f"""CREATE DATABASE {name} with template reference"""
+        cur.execute(sql)
+        print("Database created successfully........")
+    finally:
+        cur.close()
+        conn.close()
+
+
+def drop_database(name):
+    config = get_config()
+    conn = psycopg2.connect(
+        database="reference",
+        user=config.database.login,
+        password=config.database.password,
+        host=config.database.host,
+        port=config.database.port,
+    )
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    try:
+        sql = f"""DROP DATABASE {name}"""
+        cur.execute(sql)
+
+        print("Database dropped successfully........")
+    finally:
+        cur.close()
+        conn.close()
 
 
 @pytest.fixture(scope="session")
-def event_loop(request):
+def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 
-@pytest_asyncio.fixture(scope="session")
-async def application() -> AsyncIterator[Application]:
+class ClientSession(aiohttp.ClientSession):
+    def __init__(self):
+        self.base_url = "http://localhost:8000"
+        super().__init__()
+
+    def _request(self, method, url, *args, **kwargs):
+        return super()._request(method, urljoin(self.base_url, url), **kwargs)
+
+
+@pytest_asyncio.fixture(scope="function", autouse=True)
+async def server():
     app = application_factory()
+
+    name = generate_random_name()
+    create_database(name)
+    os.environ["DB_DATABASE"] = name
+
+    server_process = Process(target=run)
+    server_process.start()
+
+    if not server_process.is_alive():
+        raise TypeError("The server process did not start!")
+
     await app.start()
     yield app
     await app.stop()
+    server_process.terminate()
+    drop_database(name)
 
 
 @pytest_asyncio.fixture(scope="session")
-async def test_client(application) -> TestClient:
-    return TestClient(application)
+async def test_client() -> type[ClientSession]:
+    return ClientSession
