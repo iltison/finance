@@ -9,3 +9,8 @@ class BondCreateRequest:
 @dataclass
 class BondCreateResponse:
     name: str
+
+
+@dataclass
+class BondsGetResponse:
+    names: list[str]

@@ -8,7 +8,7 @@ from main_service.app.controllers.web_api.routes.bond import bond_router
 from main_service.app.controllers.web_api.routes.home import home_router
 from main_service.app.di.container import get_container
 
-logger = structlog.get_logger("main")
+logger = structlog.get_logger(__name__)
 
 
 async def on_shutdown(applications: Application):

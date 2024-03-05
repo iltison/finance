@@ -1,9 +1,10 @@
 from rodi import ActivationScope
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 
-from main_service.app.adapters.bond_repo import BondRepoDatabase, BondRepoInterface
+from main_service.app.adapters.bond_repo import BondDAODatabase, BondDAOInterface
 from main_service.app.adapters.unit_of_work import PostgresUOW, UOWInterface
 from main_service.app.application.commands.create_bond import CreateBondService
+from main_service.app.application.queries.get_bonds import GetBondsService
 from main_service.app.config import Config
 
 
@@ -25,15 +26,24 @@ def build_uow(context: ActivationScope) -> UOWInterface:
     return PostgresUOW(session=session_factory())
 
 
-def build_bond_repository_factory(context: ActivationScope) -> BondRepoInterface:
+def build_bond_repository_factory(context: ActivationScope) -> BondDAOInterface:
     session_factory = context.provider.get(async_sessionmaker)
-    return BondRepoDatabase(session_factory())
+    return BondDAODatabase(session_factory())
 
 
 def build_create_bound_service(context: ActivationScope) -> CreateBondService:
     session_factory = context.provider.get(async_sessionmaker)
     session = session_factory()
 
-    repo = BondRepoDatabase(session)
+    repo = BondDAODatabase(session)
     uow = PostgresUOW(session=session)
     return CreateBondService(repo=repo, uow=uow)
+
+
+def build_get_bounds_service(context: ActivationScope) -> GetBondsService:
+    session_factory = context.provider.get(async_sessionmaker)
+    session = session_factory()
+
+    repo = BondDAODatabase(session)
+    uow = PostgresUOW(session=session)
+    return GetBondsService(repo=repo, uow=uow)

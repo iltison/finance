@@ -3,7 +3,7 @@ from typing import Protocol
 import structlog
 from sqlalchemy.ext.asyncio import AsyncSession
 
-logger = structlog.get_logger("uow")
+logger = structlog.get_logger(__name__)
 
 
 class UOWInterface(Protocol):

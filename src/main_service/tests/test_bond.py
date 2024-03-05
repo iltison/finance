@@ -27,3 +27,30 @@ async def test_create_bond_duplicate(test_client: AsyncClient, server):
     response = await test_client.post("/bonds", json={"name": name})
     assert response is not None
     assert response.status_code == 409
+
+
+@pytest.mark.asyncio
+async def test_get_bonds(test_client: AsyncClient, server):
+    session_factory = server.services.provider.get(async_sessionmaker)
+
+    name = "HARDCODE"
+
+    async with session_factory() as session:
+        await session.execute(sqlalchemy.text("""INSERT INTO bonds (name) VALUES (:name)"""), {"name": name})
+        await session.commit()
+
+    response = await test_client.get("/bonds")
+
+    data = response.json()
+    assert response is not None
+    assert response.status_code == 200
+    assert data == {"names": ["HARDCODE"]}
+
+
+@pytest.mark.asyncio
+async def test_get_empty_bonds(test_client: AsyncClient):
+    response = await test_client.get("/bonds")
+    data = response.json()
+    assert response is not None
+    assert response.status_code == 200
+    assert data == {"names": []}

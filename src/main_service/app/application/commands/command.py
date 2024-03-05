@@ -3,12 +3,8 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 
-class Command(Protocol):
-    """Абстрактный класс для всех команд"""
-
-
 @dataclass
-class CommandResult:
+class CommandResult(Protocol):
     """Абстрактный класс результатов"""
 
     result: Any = None
