@@ -10,21 +10,23 @@ name = "main"
 version = "0.0.1"
 authors = []
 description = "My service"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "blacksheep>=2.0.6",
-    "uvicorn==0.22.*",
+    "blacksheep",
+    "uvicorn",
     "alembic",
-    "psycopg2",
+    'psycopg2 ; platform_system != "Linux"',
     "structlog",
     "asyncpg",
     "requests",
     "aiohttp",
+    "httpx",
+    'psycopg2-binary ; platform_system != "Windows"',
 ]
 [project.optional-dependencies]
 test = [

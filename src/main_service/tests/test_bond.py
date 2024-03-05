@@ -1,22 +1,22 @@
 import pytest
 import sqlalchemy
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from main_service.tests.conftest import ClientSession
+from main_service.tests.conftest import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_create_bond(test_client: type[ClientSession]):
-    async with test_client() as client:
-        response = await client.post("/bonds", json={"name": "HARDCODE"})
+async def test_create_bond(test_client: type[AsyncClient]):
+    # async with test_client() as client:
+    response = await test_client.post("/bonds", json={"name": "HARDCODE"})
 
     assert response is not None
     assert response.status == 201
 
 
 @pytest.mark.asyncio
-async def test_create_bond_duplicate(test_client: type[ClientSession], server):
-    session_factory = server.services.provider.get(sessionmaker)
+async def test_create_bond_duplicate(test_client: AsyncClient, server):
+    session_factory = server.services.provider.get(async_sessionmaker)
 
     name = "HARDCODE"
 
@@ -24,7 +24,6 @@ async def test_create_bond_duplicate(test_client: type[ClientSession], server):
         await session.execute(sqlalchemy.text("""INSERT INTO bonds (name) VALUES (:name)"""), {"name": name})
         await session.commit()
 
-    async with test_client() as client:
-        response = await client.post("/bonds", json={"name": name})
+    response = await test_client.post("/bonds", json={"name": name})
     assert response is not None
     assert response.status == 409

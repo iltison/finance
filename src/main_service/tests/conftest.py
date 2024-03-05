@@ -5,6 +5,7 @@ import string
 from multiprocessing import Process
 from urllib.parse import urljoin
 
+from httpx import AsyncClient
 import aiohttp
 import psycopg2
 import pytest
@@ -36,7 +37,7 @@ def create_database(name):
     try:
         sql = f"""CREATE DATABASE {name} with template reference"""
         cur.execute(sql)
-        print("Database created successfully........")
+        print("Database created successfully........", name)
     finally:
         cur.close()
         conn.close()
@@ -92,14 +93,14 @@ async def server():
 
     if not server_process.is_alive():
         raise TypeError("The server process did not start!")
-
     await app.start()
     yield app
     await app.stop()
-    server_process.terminate()
+    server_process.terminate()  # Cleanup after test
     drop_database(name)
 
 
-@pytest_asyncio.fixture(scope="session")
-async def test_client() -> type[ClientSession]:
-    return ClientSession
+@pytest_asyncio.fixture(scope="function")
+async def test_client() -> type[AsyncClient]:
+    async with ClientSession() as ac:
+        yield ac
