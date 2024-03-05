@@ -5,6 +5,7 @@ import string
 from multiprocessing import Process
 from urllib.parse import urljoin
 
+import httpx
 from httpx import AsyncClient
 import aiohttp
 import psycopg2
@@ -101,6 +102,6 @@ async def server():
 
 
 @pytest_asyncio.fixture(scope="function")
-async def test_client() -> type[AsyncClient]:
-    async with ClientSession() as ac:
-        yield ac
+async def test_client() -> AsyncClient:
+    async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
+        yield client

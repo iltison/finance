@@ -7,9 +7,9 @@ from main_service.tests.conftest import AsyncClient
 async def test_get_home(test_client: AsyncClient):
     response = await test_client.get("/")
 
-    data = await response.json()
+    data = response.json()
 
     assert response is not None
-    assert response.status == 200
+    assert response.status_code == 200
 
     assert data["ok"] is True

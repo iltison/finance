@@ -6,12 +6,12 @@ from main_service.tests.conftest import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_create_bond(test_client: type[AsyncClient]):
+async def test_create_bond(test_client: AsyncClient):
     # async with test_client() as client:
     response = await test_client.post("/bonds", json={"name": "HARDCODE"})
 
     assert response is not None
-    assert response.status == 201
+    assert response.status_code == 201
 
 
 @pytest.mark.asyncio
@@ -26,4 +26,4 @@ async def test_create_bond_duplicate(test_client: AsyncClient, server):
 
     response = await test_client.post("/bonds", json={"name": name})
     assert response is not None
-    assert response.status == 409
+    assert response.status_code == 409
