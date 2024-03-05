@@ -1,7 +1,7 @@
 from rodi import ActivationScope
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 
-from main_service.app.adapters.bond_repo import BondDAODatabase, BondDAOInterface
+from main_service.app.adapters.bond_dao import BondDAODatabase, BondDAOInterface
 from main_service.app.adapters.unit_of_work import PostgresUOW, UOWInterface
 from main_service.app.application.commands.create_bond import CreateBondService
 from main_service.app.application.queries.get_bonds import GetBondsService
