@@ -12,7 +12,8 @@ import psycopg2
 import pytest
 import pytest_asyncio
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
+from alembic.command import upgrade
+from alembic.config import Config as AlembicConfig
 from main_service.app.config import get_config
 from main_service.app.controllers.web_api.app import application_factory
 from main_service.app.main import run
@@ -63,6 +64,19 @@ def drop_database(name):
     finally:
         cur.close()
         conn.close()
+
+
+@pytest.fixture(scope="module", autouse=True)
+def migration():
+    """
+    Накатывание последней версии миграции на теестовую таблицу
+    :return:
+    """
+    config = get_config()
+    postgres_url = f"postgresql://{config.database.login}:{config.database.password}@{config.database.host}:{config.database.port}/reference"
+    alembic_cfg = AlembicConfig("alembic.ini")
+    alembic_cfg.set_main_option("sqlalchemy.url", postgres_url)
+    upgrade(alembic_cfg, "head")
 
 
 @pytest.fixture(scope="session")
