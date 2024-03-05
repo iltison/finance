@@ -3,11 +3,9 @@ import os
 import random
 import string
 from multiprocessing import Process
-from urllib.parse import urljoin
 
 import httpx
 from httpx import AsyncClient
-import aiohttp
 import psycopg2
 import pytest
 import pytest_asyncio
@@ -84,15 +82,6 @@ def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
-
-
-class ClientSession(aiohttp.ClientSession):
-    def __init__(self):
-        self.base_url = "http://localhost:8000"
-        super().__init__()
-
-    def _request(self, method, url, *args, **kwargs):
-        return super()._request(method, urljoin(self.base_url, url), **kwargs)
 
 
 @pytest_asyncio.fixture(scope="function", autouse=True)
