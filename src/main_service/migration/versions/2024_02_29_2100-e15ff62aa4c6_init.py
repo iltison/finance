@@ -57,4 +57,5 @@ def downgrade() -> None:
     op.drop_table("bond_operations")
     op.drop_index(op.f("ix_bonds_id"), table_name="bonds")
     op.drop_table("bonds")
+    sa.Enum(name="bondtype").drop(op.get_bind(), checkfirst=False)
     # ### end Alembic commands ###
