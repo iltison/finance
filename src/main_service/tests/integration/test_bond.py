@@ -1,15 +1,17 @@
 import pytest
-import sqlalchemy
+import structlog
+from httpx import AsyncClient
+from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from main_service.tests.conftest import AsyncClient
+from main_service.app.domain.bond import Bond
+
+logger = structlog.get_logger(__name__)
 
 
 @pytest.mark.asyncio
 async def test_create_bond(test_client: AsyncClient):
-    # async with test_client() as client:
     response = await test_client.post("/bonds", json={"name": "HARDCODE"})
-
     assert response is not None
     assert response.status_code == 201
 
@@ -21,7 +23,8 @@ async def test_create_bond_duplicate(test_client: AsyncClient, server):
     name = "HARDCODE"
 
     async with session_factory() as session:
-        await session.execute(sqlalchemy.text("""INSERT INTO bonds (name) VALUES (:name)"""), {"name": name})
+        query = insert(Bond).values(name=name)
+        await session.execute(query)
         await session.commit()
 
     response = await test_client.post("/bonds", json={"name": name})
@@ -36,7 +39,8 @@ async def test_get_bonds(test_client: AsyncClient, server):
     name = "HARDCODE"
 
     async with session_factory() as session:
-        await session.execute(sqlalchemy.text("""INSERT INTO bonds (name) VALUES (:name)"""), {"name": name})
+        query = insert(Bond).values(name=name)
+        await session.execute(query)
         await session.commit()
 
     response = await test_client.get("/bonds")

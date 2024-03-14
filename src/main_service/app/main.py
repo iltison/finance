@@ -3,6 +3,7 @@ import sys
 
 import uvicorn
 
+from main_service.app.adapters.persistence.map import run_mapper
 from main_service.app.config import get_web_config
 from main_service.app.controllers.web_api.app import application_factory
 
@@ -18,7 +19,7 @@ def get_logger():
 def run():
     get_logger()
     web_config = get_web_config()
-
+    run_mapper()
     uvicorn.run(
         application_factory(),
         host=web_config.host,

@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from sqlalchemy import text
+from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main_service.app.domain.bond import Bond
@@ -19,35 +19,17 @@ class BondDAODatabase:
         self.__session = session
 
     async def get_by_id(self, name: str) -> Bond | None:
-        result = list(
-            await self.__session.execute(
-                text("""SELECT * FROM bonds where name = :name"""),
-                {"name": name},
-            ),
-        )
-        if len(result) == 0:
-            return None
-
-        return Bond(name=result[0][1])
+        query = select(Bond).where(Bond.name == name)
+        print(query)
+        result = await self.__session.execute(query)
+        result = result.first()
+        return result
 
     async def add(self, entity: Bond):
-        await self.__session.execute(
-            text(
-                """
-            INSERT INTO bonds (name)
-            VALUES (:name);
-            """,
-            ),
-            {"name": entity.name},
-        )
+        query = insert(Bond).values(name=entity.name)
+        await self.__session.execute(query)
 
     async def get_all(self) -> list[Bond]:
-        result_query = list(
-            await self.__session.execute(
-                text("""SELECT * FROM bonds"""),
-            ),
-        )
-        if len(result_query) == 0:
-            return []
-
-        return [Bond(name=i[1]) for i in result_query]
+        query = select(Bond)
+        result = await self.__session.execute(query)
+        return result.scalars().all()

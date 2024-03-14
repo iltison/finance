@@ -24,5 +24,4 @@ class BondController(Controller):
     @bond_router.get("/bonds")
     async def get_bonds(self, service: GetBondsService) -> BondsGetResponse:
         result = await service.execute()
-
         return BondsGetResponse([i.name for i in result.payload])

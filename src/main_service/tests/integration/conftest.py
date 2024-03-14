@@ -12,6 +12,9 @@ import pytest_asyncio
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from alembic.command import upgrade
 from alembic.config import Config as AlembicConfig
+from sqlalchemy.orm import clear_mappers
+
+from main_service.app.adapters.persistence.map import run_mapper
 from main_service.app.config import get_config
 from main_service.app.controllers.web_api.app import application_factory
 from main_service.app.main import run
@@ -82,6 +85,16 @@ def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def mappers():
+    """
+    Маппинг таблиц на доменные модели
+    :return:
+    """
+    clear_mappers()
+    run_mapper()
 
 
 @pytest_asyncio.fixture(scope="function", autouse=True)

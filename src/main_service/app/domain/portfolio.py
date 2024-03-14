@@ -1,11 +1,13 @@
+import datetime
 from dataclasses import dataclass, field
 
+from main_service.app.domain.bond import Bond
 from main_service.app.domain.const import UUID
-from main_service.app.domain.operation import BondOperation
 
 
 @dataclass
-class Bond:
+class Portfolio:
     name: str
+    created_at: datetime
     id: UUID = field(default_factory=UUID)
-    operations: list[BondOperation] = field(default_factory=list)
+    bonds: list[Bond] = field(default_factory=list)

@@ -26,6 +26,7 @@ dependencies = [
     "requests",
     "aiohttp",
     "httpx",
+    "uuid6",
     'psycopg2-binary ; platform_system != "Windows"',
 ]
 [project.optional-dependencies]
