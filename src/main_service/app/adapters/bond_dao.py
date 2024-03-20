@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Protocol, cast
 
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,9 +20,8 @@ class BondDAODatabase:
 
     async def get_by_id(self, name: str) -> Bond | None:
         query = select(Bond).where(Bond.name == name)
-        print(query)
         result = await self.__session.execute(query)
-        result = result.first()
+        result = result.scalars().first()
         return result
 
     async def add(self, entity: Bond):
@@ -32,4 +31,4 @@ class BondDAODatabase:
     async def get_all(self) -> list[Bond]:
         query = select(Bond)
         result = await self.__session.execute(query)
-        return result.scalars().all()
+        return cast(list[Bond], result.scalars().all())

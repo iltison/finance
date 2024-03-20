@@ -16,11 +16,11 @@ def run_mapper():
     mapper_registry.map_imperatively(
         Bond,
         bonds_table,
-        properties={"operations": relationship(BondOperation)},
+        properties={"operations": relationship(BondOperation, lazy="subquery")},
     )
 
     mapper_registry.map_imperatively(
         Portfolio,
         portfolio_table,
-        properties={"bonds": relationship(Bond)},
+        properties={"bonds": relationship(Bond, lazy="subquery")},
     )

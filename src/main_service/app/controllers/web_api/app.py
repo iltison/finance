@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 from main_service.app.controllers.web_api.routes.bond import bond_router
 from main_service.app.controllers.web_api.routes.home import home_router
+from main_service.app.controllers.web_api.routes.portfolio import portfolio_router
 from main_service.app.di.container import get_container
 
 logger = structlog.get_logger(__name__)
@@ -26,7 +27,7 @@ def application_factory():
     )
 
     containers = get_container()
-    router = Router(sub_routers=[home_router, bond_router])
+    router = Router(sub_routers=[home_router, bond_router, portfolio_router])
     app = Application(services=containers, router=router, show_error_details=True)
 
     app.on_stop += on_shutdown
