@@ -80,3 +80,14 @@ async def test_get_portfolio_with_bonds(test_client: AsyncClient, server):
         "id": str(portfolio_entity.id),
         "bonds": [{"name": name}],
     }
+
+
+@pytest.mark.asyncio
+async def test_create_portfolio(test_client: AsyncClient):
+    name = "HARDCODE"
+
+    response = await test_client.post("/portfolios", json={"name": name})
+    data = response.json()
+    assert response is not None
+    assert response.status_code == 200
+    assert data is not None

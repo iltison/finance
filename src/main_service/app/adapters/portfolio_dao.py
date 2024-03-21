@@ -1,6 +1,6 @@
 from typing import Protocol, cast
 
-from sqlalchemy import insert, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main_service.app.domain.const import UUID
@@ -26,8 +26,7 @@ class PortfolioDAO:
         return result
 
     async def add(self, entity: Portfolio):
-        query = insert(Portfolio).values(name=entity.name)
-        await self.__session.execute(query)
+        self.__session.add(entity)
 
     async def get_all(self) -> list[Portfolio]:
         query = select(Portfolio)

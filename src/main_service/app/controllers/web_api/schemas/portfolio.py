@@ -17,3 +17,13 @@ class PortfolioGetResponse:
     id: uuid.UUID
     name: str
     bonds: list[PortfolioGetBondResponse] = field(default_factory=list)
+
+
+@dataclass
+class PortfolioCreateRequest:
+    name: str
+
+
+@dataclass
+class PortfolioCreateResponse:
+    id: uuid.UUID
