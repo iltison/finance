@@ -3,6 +3,7 @@ import structlog
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
+from main_service.app.domain.bond import BondAggregate
 from main_service.app.domain.portfolio import (
     BondEntity,
     PortfolioAggregate,
@@ -66,11 +67,14 @@ async def test_get_empty_portfolios(test_client: AsyncClient):
 async def test_get_portfolio_with_bonds(test_client: AsyncClient, server):
     session_factory = server.services.provider.get(async_sessionmaker)
 
+    isin = "HARDCODE"
     name = "HARDCODE"
-    bond_entity = BondEntity(name=name)
+    bond_entity = BondEntity(bond_isin=isin)
+    bond_aggregate = BondAggregate(isin=isin, name=name)
     portfolio_entity = PortfolioAggregate(name=name, bonds=[bond_entity])
     async with session_factory() as session:
         session.add(portfolio_entity)
+        session.add(bond_aggregate)
         await session.commit()
 
     response = await test_client.get(f"/portfolios/{str(portfolio_entity.id)}")
@@ -80,7 +84,7 @@ async def test_get_portfolio_with_bonds(test_client: AsyncClient, server):
     assert data == {
         "name": name,
         "id": str(portfolio_entity.id),
-        "bonds": [{"name": name}],
+        "bonds": [{"isin": isin}],
     }
 
 
@@ -99,14 +103,17 @@ async def test_create_portfolio(test_client: AsyncClient):
 async def test_create_portfolio_bond(test_client: AsyncClient, server):
     session_factory = server.services.provider.get(async_sessionmaker)
     name = "HARDCODE"
+    isin = "HARDCODE"
 
     portfolio = PortfolioAggregate(name=name)
+    bond_aggregate = BondAggregate(isin=isin, name=name)
     async with session_factory() as session:
         session.add(portfolio)
+        session.add(bond_aggregate)
         await session.commit()
 
     response = await test_client.post(
-        f"/portfolios/{str(portfolio.id)}/bonds", json={"name": name}
+        f"/portfolios/{str(portfolio.id)}/bonds", json={"isin": isin}
     )
     assert response is not None
     assert response.status_code == 201
@@ -119,10 +126,13 @@ async def test_create_portfolio_bond_operation(
     session_factory = server.services.provider.get(async_sessionmaker)
 
     name = "HARDCODE"
-    bond_entity = BondEntity(name=name)
+    isin = "HARDCODE"
+    bond_entity = BondEntity(bond_isin=isin)
+    bond_aggregate = BondAggregate(isin=isin, name=name)
     portfolio_entity = PortfolioAggregate(name=name, bonds=[bond_entity])
     async with session_factory() as session:
         session.add(portfolio_entity)
+        session.add(bond_aggregate)
         await session.commit()
 
     response = await test_client.post(

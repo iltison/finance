@@ -12,7 +12,7 @@ class PortfolioGetRequest:
 
 @dataclass
 class PortfolioGetBondResponse:
-    name: str
+    isin: str
 
 
 @dataclass
@@ -45,4 +45,4 @@ class OperationCreateRequest:
 
 @dataclass
 class BondCreateRequest:
-    name: str
+    isin: str

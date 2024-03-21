@@ -21,7 +21,7 @@ class BondOperationVO:
 
 @dataclass
 class BondEntity:
-    name: str
+    bond_isin: str
     id: UUID = field(default_factory=UUID)
     operations: list[BondOperationVO] = field(default_factory=list)
 

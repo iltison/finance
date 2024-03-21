@@ -16,7 +16,7 @@ logger = structlog.get_logger(__name__)
 
 @dataclass
 class CreateBondCommand:
-    name: str
+    isin: str
     portfolio_id: UUID
 
 
@@ -34,10 +34,10 @@ class CreateBondService:
     async def execute(
         self, command: CreateBondCommand
     ) -> CommandCreateBondResult:
-        structlog.contextvars.bind_contextvars(bond_name=command.name)
+        structlog.contextvars.bind_contextvars(bond_isin=command.isin)
         async with self.__uow:
             portfolio = await self.__repo.get_by_id(command.portfolio_id)
-            bond = BondEntity(name=command.name)
+            bond = BondEntity(bond_isin=command.isin)
             portfolio.add_bond(bond)
             await self.__repo.update(portfolio)
         logger.info("Bond created")

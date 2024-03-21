@@ -86,7 +86,7 @@ class PortfolioController(Controller):
             id=result.payload.id,
             name=result.payload.name,
             bonds=[
-                PortfolioGetBondResponse(name=bond.name)
+                PortfolioGetBondResponse(isin=bond.bond_isin)
                 for bond in result.payload.bonds
             ],
         )
@@ -119,7 +119,7 @@ class PortfolioController(Controller):
         model: BondCreateRequest,
         service: CreateBondService,
     ) -> Response:
-        command = CreateBondCommand(name=model.name, portfolio_id=portfolio_id)
+        command = CreateBondCommand(isin=model.isin, portfolio_id=portfolio_id)
         result = await service.execute(command)
         if len(result.errors) != 0:
             return Response(

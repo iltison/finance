@@ -1,3 +1,4 @@
-from main_service.app.adapters.postgres.table import bond
+from main_service.app.adapters.postgres.base import metadata
+from main_service.app.adapters.postgres.table import bond, portfolio
 
-target_metadata = [bond.metadata]
+target_metadata = [metadata]
