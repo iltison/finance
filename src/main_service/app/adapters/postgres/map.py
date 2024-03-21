@@ -1,6 +1,6 @@
 from sqlalchemy.orm import registry, relationship
 
-from main_service.app.adapters.persistence.table.bond import (
+from main_service.app.adapters.postgres.table.bond import (
     bonds_table,
     metadata,
     operations_table,

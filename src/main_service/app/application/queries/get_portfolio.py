@@ -2,8 +2,10 @@ from dataclasses import dataclass, field
 
 import structlog
 
-from main_service.app.adapters.portfolio_dao import PortfolioDAOInterface
-from main_service.app.adapters.unit_of_work import UOWInterface
+from main_service.app.adapters.interface.portfolio_dao import (
+    PortfolioDAOInterface,
+)
+from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.queries.query import QueryResult
 from main_service.app.domain.const import UUID
 from main_service.app.domain.portfolio import Portfolio

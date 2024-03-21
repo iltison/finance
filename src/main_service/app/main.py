@@ -3,7 +3,7 @@ import sys
 
 import uvicorn
 
-from main_service.app.adapters.persistence.map import run_mapper
+from main_service.app.adapters.postgres.map import run_mapper
 from main_service.app.config import get_web_config
 from main_service.app.controllers.web_api.app import application_factory
 

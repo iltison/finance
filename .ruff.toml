@@ -3,7 +3,7 @@ target-version="py311"
 src = ["src"]
 
 include = ["src/main_service/**.py"]
-exclude = ["src/main_service/migration/**.py"]
+exclude = ["src/main_service/app/adapters/postgres/migration/**.py"]
 
 lint.select = [
    "T20", # flake8-print

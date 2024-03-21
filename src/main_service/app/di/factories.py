@@ -5,12 +5,13 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from main_service.app.adapters.bond_dao import (
-    BondDAODatabase,
+from main_service.app.adapters.interface.bond_dao import (
     BondDAOInterface,
 )
-from main_service.app.adapters.portfolio_dao import PortfolioDAO
-from main_service.app.adapters.unit_of_work import PostgresUOW, UOWInterface
+from main_service.app.adapters.interface.unit_of_work import UOWInterface
+from main_service.app.adapters.postgres.dao.bond_dao import BondDAODatabase
+from main_service.app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
+from main_service.app.adapters.postgres.dao.unit_of_work import PostgresUOW
 from main_service.app.application.commands.create_bond import CreateBondService
 from main_service.app.application.commands.create_portfolio import (
     CreatePortfolioService,

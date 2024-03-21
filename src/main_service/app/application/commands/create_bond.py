@@ -2,8 +2,8 @@ from dataclasses import dataclass, field
 
 import structlog
 
-from main_service.app.adapters.bond_dao import BondDAOInterface
-from main_service.app.adapters.unit_of_work import UOWInterface
+from main_service.app.adapters.interface.bond_dao import BondDAOInterface
+from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.commands.command import CommandResult
 from main_service.app.domain.bond import Bond
 from main_service.app.domain.exeption import ServiceError, ValueExistError

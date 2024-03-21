@@ -15,7 +15,7 @@ from httpx import AsyncClient
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy.orm import clear_mappers
 
-from main_service.app.adapters.persistence.map import run_mapper
+from main_service.app.adapters.postgres.map import run_mapper
 from main_service.app.config import get_config
 from main_service.app.controllers.web_api.app import application_factory
 from main_service.app.main import run

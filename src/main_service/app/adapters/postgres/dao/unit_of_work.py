@@ -1,15 +1,6 @@
-from typing import Protocol
-
-import structlog
 from sqlalchemy.ext.asyncio import AsyncSession
 
-logger = structlog.get_logger(__name__)
-
-
-class UOWInterface(Protocol):
-    async def __aenter__(self) -> "UOWInterface": ...
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None: ...
+from main_service.app.adapters.interface.unit_of_work import logger
 
 
 class PostgresUOW:
