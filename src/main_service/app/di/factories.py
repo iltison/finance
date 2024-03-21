@@ -58,7 +58,7 @@ def build_create_bound_service(context: ActivationScope) -> CreateBondService:
     session_factory = context.provider.get(async_sessionmaker)
     session = session_factory()
 
-    repo = BondDAODatabase(session)
+    repo = PortfolioDAO(session)
     uow = PostgresUOW(session=session)
     return CreateBondService(repo=repo, uow=uow)
 

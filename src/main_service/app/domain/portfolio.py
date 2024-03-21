@@ -11,6 +11,14 @@ class Portfolio:
     id: UUID = field(default_factory=UUID)
     bonds: list[Bond] = field(default_factory=list)
 
+    def add_bond(self, bond: Bond):
+        """
+        Добавление облигации
+        :param bond:
+        :return:
+        """
+        self.bonds.append(bond)
+
     def add_bond_operation(self, bond_id: UUID, operation: BondOperation):
         """
         Добавление операции

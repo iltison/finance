@@ -1,3 +1,5 @@
+import uuid
+
 import structlog
 from blacksheep import JSONContent, Response, Router, created
 from blacksheep.server.controllers import Controller
@@ -20,11 +22,14 @@ logger = structlog.get_logger(__name__)
 
 
 class BondController(Controller):
-    @bond_router.post("/bonds")
+    @bond_router.post("/portfolios/{portfolio_id}/bonds")
     async def create_bond(
-        self, model: BondCreateRequest, service: CreateBondService
+        self,
+        portfolio_id: uuid.UUID,
+        model: BondCreateRequest,
+        service: CreateBondService,
     ) -> Response:
-        command = CreateBondCommand(name=model.name)
+        command = CreateBondCommand(name=model.name, portfolio_id=portfolio_id)
         result = await service.execute(command)
         if len(result.errors) != 0:
             return Response(

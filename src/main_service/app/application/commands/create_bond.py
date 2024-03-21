@@ -2,11 +2,14 @@ from dataclasses import dataclass, field
 
 import structlog
 
-from main_service.app.adapters.interface.bond_dao import BondDAOInterface
+from main_service.app.adapters.interface.portfolio_dao import (
+    PortfolioDAOInterface,
+)
 from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.commands.command import CommandResult
 from main_service.app.domain.bond import Bond
-from main_service.app.domain.exeption import ServiceError, ValueExistError
+from main_service.app.domain.const import UUID
+from main_service.app.domain.exeption import ServiceError
 
 logger = structlog.get_logger(__name__)
 
@@ -14,6 +17,7 @@ logger = structlog.get_logger(__name__)
 @dataclass
 class CreateBondCommand:
     name: str
+    portfolio_id: UUID
 
 
 @dataclass
@@ -23,7 +27,7 @@ class CommandCreateBondResult(CommandResult):
 
 
 class CreateBondService:
-    def __init__(self, uow: UOWInterface, repo: BondDAOInterface):
+    def __init__(self, uow: UOWInterface, repo: PortfolioDAOInterface):
         self.__uow = uow
         self.__repo = repo
 
@@ -32,12 +36,9 @@ class CreateBondService:
     ) -> CommandCreateBondResult:
         structlog.contextvars.bind_contextvars(bond_name=command.name)
         async with self.__uow:
-            bond = await self.__repo.get_by_id(command.name)
-            if bond is not None:
-                logger.debug("Bond exist")
-                return CommandCreateBondResult().failed(
-                    exception=ValueExistError(f"Bond {command.name} exist ")
-                )
-            await self.__repo.add(Bond(name=command.name))
+            portfolio = await self.__repo.get_by_id(command.portfolio_id)
+            bond = Bond(name=command.name)
+            portfolio.add_bond(bond)
+            await self.__repo.update(portfolio)
         logger.info("Bond created")
         return CommandCreateBondResult().ok()
