@@ -1,4 +1,3 @@
-import datetime
 import enum
 from dataclasses import dataclass, field
 from datetime import date
@@ -13,8 +12,8 @@ class BondType(enum.Enum):
 
 @dataclass
 class BondOperation:
-    price: float
+    price_per_piece: float
+    count: int
     date: date
     type: BondType
-    created_at: datetime
     id: UUID = field(default_factory=UUID)

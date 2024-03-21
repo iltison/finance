@@ -13,6 +13,9 @@ from main_service.app.adapters.postgres.dao.bond_dao import BondDAODatabase
 from main_service.app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
 from main_service.app.adapters.postgres.dao.unit_of_work import PostgresUOW
 from main_service.app.application.commands.create_bond import CreateBondService
+from main_service.app.application.commands.create_operation import (
+    CreateOperationService,
+)
 from main_service.app.application.commands.create_portfolio import (
     CreatePortfolioService,
 )
@@ -100,3 +103,14 @@ def build_create_portfolio_service(
     repo = PortfolioDAO(session)
     uow = PostgresUOW(session=session)
     return CreatePortfolioService(repo=repo, uow=uow)
+
+
+def build_create_operation_service(
+    context: ActivationScope,
+) -> CreateOperationService:
+    session_factory = context.provider.get(async_sessionmaker)
+    session = session_factory()
+
+    repo = PortfolioDAO(session)
+    uow = PostgresUOW(session=session)
+    return CreateOperationService(repo=repo, uow=uow)

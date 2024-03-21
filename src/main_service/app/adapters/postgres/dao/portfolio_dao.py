@@ -24,3 +24,6 @@ class PortfolioDAO:
         query = select(Portfolio)
         result = await self.__session.execute(query)
         return cast(list[Portfolio], result.scalars().all())
+
+    async def update(self, entity: Portfolio):
+        await self.__session.merge(entity)

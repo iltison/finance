@@ -6,6 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 from main_service.app.controllers.web_api.routes.bond import bond_router
 from main_service.app.controllers.web_api.routes.home import home_router
+from main_service.app.controllers.web_api.routes.operation import (
+    operation_router,
+)
 from main_service.app.controllers.web_api.routes.portfolio import (
     portfolio_router,
 )
@@ -29,7 +32,14 @@ def application_factory():
     )
 
     containers = get_container()
-    router = Router(sub_routers=[home_router, bond_router, portfolio_router])
+    router = Router(
+        sub_routers=[
+            home_router,
+            bond_router,
+            portfolio_router,
+            operation_router,
+        ]
+    )
     app = Application(
         services=containers, router=router, show_error_details=True
     )
