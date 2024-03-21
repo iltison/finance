@@ -10,7 +10,7 @@ from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.commands.command import CommandResult
 from main_service.app.domain.const import UUID
 from main_service.app.domain.exeption import ServiceError
-from main_service.app.domain.portfolio import Portfolio
+from main_service.app.domain.portfolioaggregate import PortfolioAggregate
 
 logger = structlog.get_logger(__name__)
 
@@ -37,7 +37,7 @@ class CreatePortfolioService:
         structlog.contextvars.bind_contextvars(portfolio_name=command.name)
 
         async with self.__uow:
-            portfolio = Portfolio(name=command.name)
+            portfolio = PortfolioAggregate(name=command.name)
             await self.__repo.add(portfolio)
         logger.info("Portfolio created")
         return CommandCreatePortfolioResult().ok(portfolio.id)

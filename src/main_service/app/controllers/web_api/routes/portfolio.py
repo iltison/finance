@@ -1,9 +1,17 @@
 import uuid
 
 import structlog
-from blacksheep import JSONContent, Response, Router
+from blacksheep import JSONContent, Response, Router, created
 from blacksheep.server.controllers import Controller
 
+from main_service.app.application.commands.create_bond import (
+    CreateBondCommand,
+    CreateBondService,
+)
+from main_service.app.application.commands.create_operation import (
+    CreateOperationCommand,
+    CreateOperationService,
+)
 from main_service.app.application.commands.create_portfolio import (
     CreatePortfolioCommand,
     CreatePortfolioService,
@@ -19,6 +27,8 @@ from main_service.app.controllers.web_api.schemas.additional import (
     ExceptionResponse,
 )
 from main_service.app.controllers.web_api.schemas.portfolio import (
+    BondCreateRequest,
+    OperationCreateRequest,
     PortfolioCreateRequest,
     PortfolioCreateResponse,
     PortfolioGetBondResponse,
@@ -101,3 +111,56 @@ class PortfolioController(Controller):
                 ),
             )
         return PortfolioCreateResponse(id=result.result)
+
+    @portfolio_router.post("/portfolios/{portfolio_id}/bonds")
+    async def create_bond(
+        self,
+        portfolio_id: uuid.UUID,
+        model: BondCreateRequest,
+        service: CreateBondService,
+    ) -> Response:
+        command = CreateBondCommand(name=model.name, portfolio_id=portfolio_id)
+        result = await service.execute(command)
+        if len(result.errors) != 0:
+            return Response(
+                status=409,
+                content=JSONContent(
+                    ExceptionResponse(message=str(result.errors))
+                ),
+            )
+
+        return created()
+
+    @portfolio_router.post(
+        "/portfolios/{portfolio_id}/bonds/{bond_id}/operations"
+    )
+    async def create_bond_operation(
+        self,
+        portfolio_id: uuid.UUID,
+        bond_id: uuid.UUID,
+        model: OperationCreateRequest,
+        service: CreateOperationService,
+    ) -> Response:
+        """
+        Добавление операции
+        :return:
+        """
+
+        command = CreateOperationCommand(
+            portfolio_id=portfolio_id,
+            bond_id=bond_id,
+            price_per_piece=model.price_per_piece,
+            count=model.count,
+            date=model.date,
+            type=model.type,
+        )
+        result = await service.execute(command)
+
+        if len(result.errors) != 0:
+            return Response(
+                status=409,
+                content=JSONContent(
+                    ExceptionResponse(message=str(result.errors))
+                ),
+            )
+        return created()

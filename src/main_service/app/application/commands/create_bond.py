@@ -7,9 +7,9 @@ from main_service.app.adapters.interface.portfolio_dao import (
 )
 from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.commands.command import CommandResult
-from main_service.app.domain.bond import Bond
 from main_service.app.domain.const import UUID
 from main_service.app.domain.exeption import ServiceError
+from main_service.app.domain.portfolioaggregate import BondEntity
 
 logger = structlog.get_logger(__name__)
 
@@ -37,7 +37,7 @@ class CreateBondService:
         structlog.contextvars.bind_contextvars(bond_name=command.name)
         async with self.__uow:
             portfolio = await self.__repo.get_by_id(command.portfolio_id)
-            bond = Bond(name=command.name)
+            bond = BondEntity(name=command.name)
             portfolio.add_bond(bond)
             await self.__repo.update(portfolio)
         logger.info("Bond created")

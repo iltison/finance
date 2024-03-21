@@ -3,8 +3,10 @@ import structlog
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from main_service.app.domain.bond import Bond
-from main_service.app.domain.portfolio import Portfolio
+from main_service.app.domain.portfolioaggregate import (
+    BondEntity,
+    PortfolioAggregate,
+)
 
 logger = structlog.get_logger(__name__)
 
@@ -14,7 +16,7 @@ async def test_get_portfolio_by_id(test_client: AsyncClient, server):
     session_factory = server.services.provider.get(async_sessionmaker)
 
     name = "HARDCODE"
-    portfolio_entity = Portfolio(name=name)
+    portfolio_entity = PortfolioAggregate(name=name)
     async with session_factory() as session:
         session.add(portfolio_entity)
         await session.commit()
@@ -35,7 +37,7 @@ async def test_get_portfolios(test_client: AsyncClient, server):
     session_factory = server.services.provider.get(async_sessionmaker)
 
     name = "HARDCODE"
-    portfolio_entity = Portfolio(name=name)
+    portfolio_entity = PortfolioAggregate(name=name)
 
     async with session_factory() as session:
         session.add(portfolio_entity)
@@ -65,8 +67,8 @@ async def test_get_portfolio_with_bonds(test_client: AsyncClient, server):
     session_factory = server.services.provider.get(async_sessionmaker)
 
     name = "HARDCODE"
-    bond_entity = Bond(name=name)
-    portfolio_entity = Portfolio(name=name, bonds=[bond_entity])
+    bond_entity = BondEntity(name=name)
+    portfolio_entity = PortfolioAggregate(name=name, bonds=[bond_entity])
     async with session_factory() as session:
         session.add(portfolio_entity)
         await session.commit()
@@ -91,3 +93,47 @@ async def test_create_portfolio(test_client: AsyncClient):
     assert response is not None
     assert response.status_code == 200
     assert data is not None
+
+
+@pytest.mark.asyncio
+async def test_create_portfolio_bond(test_client: AsyncClient, server):
+    session_factory = server.services.provider.get(async_sessionmaker)
+    name = "HARDCODE"
+
+    portfolio = PortfolioAggregate(name=name)
+    async with session_factory() as session:
+        session.add(portfolio)
+        await session.commit()
+
+    response = await test_client.post(
+        f"/portfolios/{str(portfolio.id)}/bonds", json={"name": name}
+    )
+    assert response is not None
+    assert response.status_code == 201
+
+
+@pytest.mark.asyncio
+async def test_create_portfolio_bond_operation(
+    test_client: AsyncClient, server
+):
+    session_factory = server.services.provider.get(async_sessionmaker)
+
+    name = "HARDCODE"
+    bond_entity = BondEntity(name=name)
+    portfolio_entity = PortfolioAggregate(name=name, bonds=[bond_entity])
+    async with session_factory() as session:
+        session.add(portfolio_entity)
+        await session.commit()
+
+    response = await test_client.post(
+        f"/portfolios/{str(portfolio_entity.id)}/bonds/{str(bond_entity.id)}/operations",
+        json={
+            "price_per_piece": 1000,
+            "count": 4,
+            "date": "2023-01-01",
+            "type": "purchase",
+        },
+    )
+
+    assert response is not None
+    assert response.status_code == 201

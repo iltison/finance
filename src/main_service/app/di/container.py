@@ -8,7 +8,6 @@ from main_service.app.application.commands.create_operation import (
 from main_service.app.application.commands.create_portfolio import (
     CreatePortfolioService,
 )
-from main_service.app.application.queries.get_bonds import GetBondsService
 from main_service.app.application.queries.get_portfolio import (
     GetPortfolioService,
 )
@@ -20,7 +19,6 @@ from main_service.app.di.factories import (
     build_create_bound_service,
     build_create_operation_service,
     build_create_portfolio_service,
-    build_get_bounds_service,
     build_get_portfolio_service,
     build_get_portfolios_service,
     build_sa_engine,
@@ -37,7 +35,6 @@ def get_container() -> Container:
     container.add_scoped_by_factory(
         build_create_bound_service, CreateBondService
     )
-    container.add_scoped_by_factory(build_get_bounds_service, GetBondsService)
 
     container.add_scoped_by_factory(
         build_get_portfolios_service, GetPortfoliosService

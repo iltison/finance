@@ -1,17 +1,38 @@
+import enum
 from dataclasses import dataclass, field
+from datetime import date
 
-from main_service.app.domain.bond import Bond
 from main_service.app.domain.const import UUID
-from main_service.app.domain.operation import BondOperation
+
+
+class BondType(enum.Enum):
+    purchase = "purchase"
+    sell = "sell"
 
 
 @dataclass
-class Portfolio:
+class BondOperationVO:
+    price_per_piece: float
+    count: int
+    date: date
+    type: BondType
+    id: UUID = field(default_factory=UUID)
+
+
+@dataclass
+class BondEntity:
     name: str
     id: UUID = field(default_factory=UUID)
-    bonds: list[Bond] = field(default_factory=list)
+    operations: list[BondOperationVO] = field(default_factory=list)
 
-    def add_bond(self, bond: Bond):
+
+@dataclass
+class PortfolioAggregate:
+    name: str
+    id: UUID = field(default_factory=UUID)
+    bonds: list[BondEntity] = field(default_factory=list)
+
+    def add_bond(self, bond: BondEntity):
         """
         Добавление облигации
         :param bond:
@@ -19,7 +40,7 @@ class Portfolio:
         """
         self.bonds.append(bond)
 
-    def add_bond_operation(self, bond_id: UUID, operation: BondOperation):
+    def add_bond_operation(self, bond_id: UUID, operation: BondOperationVO):
         """
         Добавление операции
         :param bond_id:

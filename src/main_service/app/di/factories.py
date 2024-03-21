@@ -5,11 +5,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from main_service.app.adapters.interface.bond_dao import (
-    BondDAOInterface,
-)
 from main_service.app.adapters.interface.unit_of_work import UOWInterface
-from main_service.app.adapters.postgres.dao.bond_dao import BondDAODatabase
 from main_service.app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
 from main_service.app.adapters.postgres.dao.unit_of_work import PostgresUOW
 from main_service.app.application.commands.create_bond import CreateBondService
@@ -19,7 +15,6 @@ from main_service.app.application.commands.create_operation import (
 from main_service.app.application.commands.create_portfolio import (
     CreatePortfolioService,
 )
-from main_service.app.application.queries.get_bonds import GetBondsService
 from main_service.app.application.queries.get_portfolio import (
     GetPortfolioService,
 )
@@ -47,13 +42,6 @@ def build_uow(context: ActivationScope) -> UOWInterface:
     return PostgresUOW(session=session_factory())
 
 
-def build_bond_repository_factory(
-    context: ActivationScope,
-) -> BondDAOInterface:
-    session_factory = context.provider.get(async_sessionmaker)
-    return BondDAODatabase(session_factory())
-
-
 def build_create_bound_service(context: ActivationScope) -> CreateBondService:
     session_factory = context.provider.get(async_sessionmaker)
     session = session_factory()
@@ -61,15 +49,6 @@ def build_create_bound_service(context: ActivationScope) -> CreateBondService:
     repo = PortfolioDAO(session)
     uow = PostgresUOW(session=session)
     return CreateBondService(repo=repo, uow=uow)
-
-
-def build_get_bounds_service(context: ActivationScope) -> GetBondsService:
-    session_factory = context.provider.get(async_sessionmaker)
-    session = session_factory()
-
-    repo = BondDAODatabase(session)
-    uow = PostgresUOW(session=session)
-    return GetBondsService(repo=repo, uow=uow)
 
 
 def build_get_portfolios_service(

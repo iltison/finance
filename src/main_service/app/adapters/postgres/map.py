@@ -6,28 +6,31 @@ from main_service.app.adapters.postgres.table.bond import (
     operations_table,
     portfolio_table,
 )
-from main_service.app.domain.bond import Bond, BondOperation
-from main_service.app.domain.portfolio import Portfolio
+from main_service.app.domain.portfolioaggregate import (
+    BondEntity,
+    BondOperationVO,
+    PortfolioAggregate,
+)
 
 mapper_registry = registry(metadata=metadata)
 
 
 def run_mapper():
     mapper_registry.map_imperatively(
-        BondOperation,
+        BondOperationVO,
         operations_table,
     )
 
     mapper_registry.map_imperatively(
-        Bond,
+        BondEntity,
         bonds_table,
         properties={
-            "operations": relationship(BondOperation, lazy="subquery")
+            "operations": relationship(BondOperationVO, lazy="subquery")
         },
     )
 
     mapper_registry.map_imperatively(
-        Portfolio,
+        PortfolioAggregate,
         portfolio_table,
-        properties={"bonds": relationship(Bond, lazy="subquery")},
+        properties={"bonds": relationship(BondEntity, lazy="subquery")},
     )

@@ -1,5 +1,8 @@
 import uuid
 from dataclasses import dataclass, field
+from datetime import date, datetime
+
+from main_service.app.domain.portfolioaggregate import BondType
 
 
 @dataclass
@@ -27,3 +30,19 @@ class PortfolioCreateRequest:
 @dataclass
 class PortfolioCreateResponse:
     id: uuid.UUID
+
+
+@dataclass
+class OperationCreateRequest:
+    price_per_piece: float
+    count: int
+    date: date
+    type: BondType
+
+    def __post_init__(self):
+        self.date = datetime.strptime(self.date, "%Y-%m-%d").date()
+
+
+@dataclass
+class BondCreateRequest:
+    name: str
