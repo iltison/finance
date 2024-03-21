@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main_service.app.domain.const import UUID
-from main_service.app.domain.portfolioaggregate import PortfolioAggregate
+from main_service.app.domain.portfolio import PortfolioAggregate
 
 
 class PortfolioDAO:

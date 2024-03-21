@@ -8,7 +8,7 @@ from main_service.app.adapters.interface.portfolio_dao import (
 from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.queries.query import QueryResult
 from main_service.app.domain.const import UUID
-from main_service.app.domain.portfolioaggregate import PortfolioAggregate
+from main_service.app.domain.portfolio import PortfolioAggregate
 
 logger = structlog.get_logger(__name__)
 

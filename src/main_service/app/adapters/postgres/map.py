@@ -6,7 +6,7 @@ from main_service.app.adapters.postgres.table.bond import (
     operations_table,
     portfolio_table,
 )
-from main_service.app.domain.portfolioaggregate import (
+from main_service.app.domain.portfolio import (
     BondEntity,
     BondOperationVO,
     PortfolioAggregate,

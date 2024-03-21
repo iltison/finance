@@ -3,7 +3,7 @@ import structlog
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from main_service.app.domain.portfolioaggregate import (
+from main_service.app.domain.portfolio import (
     BondEntity,
     PortfolioAggregate,
 )

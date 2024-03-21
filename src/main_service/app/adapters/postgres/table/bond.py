@@ -2,7 +2,7 @@ import sqlalchemy as sa
 from sqlalchemy.sql import func
 from uuid6 import uuid7
 
-from main_service.app.domain.portfolioaggregate import BondType
+from main_service.app.domain.portfolio import BondType
 
 metadata = sa.MetaData()
 

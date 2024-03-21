@@ -9,7 +9,7 @@ from main_service.app.adapters.interface.unit_of_work import UOWInterface
 from main_service.app.application.commands.command import CommandResult
 from main_service.app.domain.const import UUID
 from main_service.app.domain.exeption import ServiceError
-from main_service.app.domain.portfolioaggregate import BondEntity
+from main_service.app.domain.portfolio import BondEntity
 
 logger = structlog.get_logger(__name__)
 
