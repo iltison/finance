@@ -1,6 +1,11 @@
 from sqlalchemy.orm import registry, relationship
 
-from main_service.app.adapters.persistence.table.bond import metadata, bonds_table, portfolio_table, operations_table
+from main_service.app.adapters.persistence.table.bond import (
+    bonds_table,
+    metadata,
+    operations_table,
+    portfolio_table,
+)
 from main_service.app.domain.bond import Bond, BondOperation
 from main_service.app.domain.portfolio import Portfolio
 
@@ -16,7 +21,9 @@ def run_mapper():
     mapper_registry.map_imperatively(
         Bond,
         bonds_table,
-        properties={"operations": relationship(BondOperation, lazy="subquery")},
+        properties={
+            "operations": relationship(BondOperation, lazy="subquery")
+        },
     )
 
     mapper_registry.map_imperatively(

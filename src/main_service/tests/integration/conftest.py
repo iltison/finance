@@ -5,19 +5,22 @@ import string
 from multiprocessing import Process
 
 import httpx
-from httpx import AsyncClient
 import psycopg2
 import pytest
 import pytest_asyncio
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import structlog
 from alembic.command import upgrade
 from alembic.config import Config as AlembicConfig
+from httpx import AsyncClient
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy.orm import clear_mappers
 
 from main_service.app.adapters.persistence.map import run_mapper
 from main_service.app.config import get_config
 from main_service.app.controllers.web_api.app import application_factory
 from main_service.app.main import run
+
+logger = structlog.get_logger(__name__)
 
 
 def generate_random_name():
@@ -40,7 +43,7 @@ def create_database(name):
     try:
         sql = f"""CREATE DATABASE {name} with template reference"""
         cur.execute(sql)
-        print("Database created successfully........", name)
+        logger.debug("Database created successfully........", name=name)
     finally:
         cur.close()
         conn.close()
@@ -60,8 +63,7 @@ def drop_database(name):
     try:
         sql = f"""DROP DATABASE {name}"""
         cur.execute(sql)
-
-        print("Database dropped successfully........")
+        logger.debug("Database dropped successfully........", name=name)
     finally:
         cur.close()
         conn.close()
@@ -117,7 +119,7 @@ async def server():
     drop_database(name)
 
 
-@pytest_asyncio.fixture(scope="function")
+@pytest_asyncio.fixture(scope="session")
 async def test_client() -> AsyncClient:
     async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
         yield client

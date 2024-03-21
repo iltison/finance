@@ -1,11 +1,10 @@
-from typing import Protocol
+from typing import Protocol, cast
 
-from sqlalchemy import select, insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main_service.app.domain.const import UUID
 from main_service.app.domain.portfolio import Portfolio
-from typing import cast
 
 
 class PortfolioDAOInterface(Protocol):

@@ -1,13 +1,24 @@
 from rodi import ActivationScope
-from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    async_sessionmaker,
+    create_async_engine,
+)
 
-from main_service.app.adapters.bond_dao import BondDAODatabase, BondDAOInterface
+from main_service.app.adapters.bond_dao import (
+    BondDAODatabase,
+    BondDAOInterface,
+)
 from main_service.app.adapters.portfolio_dao import PortfolioDAO
 from main_service.app.adapters.unit_of_work import PostgresUOW, UOWInterface
 from main_service.app.application.commands.create_bond import CreateBondService
 from main_service.app.application.queries.get_bonds import GetBondsService
-from main_service.app.application.queries.get_portfolio import GetPortfolioService
-from main_service.app.application.queries.get_portfolios import GetPortfoliosService
+from main_service.app.application.queries.get_portfolio import (
+    GetPortfolioService,
+)
+from main_service.app.application.queries.get_portfolios import (
+    GetPortfoliosService,
+)
 from main_service.app.config import Config
 
 
@@ -29,7 +40,9 @@ def build_uow(context: ActivationScope) -> UOWInterface:
     return PostgresUOW(session=session_factory())
 
 
-def build_bond_repository_factory(context: ActivationScope) -> BondDAOInterface:
+def build_bond_repository_factory(
+    context: ActivationScope,
+) -> BondDAOInterface:
     session_factory = context.provider.get(async_sessionmaker)
     return BondDAODatabase(session_factory())
 
@@ -52,7 +65,9 @@ def build_get_bounds_service(context: ActivationScope) -> GetBondsService:
     return GetBondsService(repo=repo, uow=uow)
 
 
-def build_get_portfolios_service(context: ActivationScope) -> GetPortfoliosService:
+def build_get_portfolios_service(
+    context: ActivationScope,
+) -> GetPortfoliosService:
     session_factory = context.provider.get(async_sessionmaker)
     session = session_factory()
 
@@ -61,7 +76,9 @@ def build_get_portfolios_service(context: ActivationScope) -> GetPortfoliosServi
     return GetPortfoliosService(repo=repo, uow=uow)
 
 
-def build_get_portfolio_service(context: ActivationScope) -> GetPortfolioService:
+def build_get_portfolio_service(
+    context: ActivationScope,
+) -> GetPortfolioService:
     session_factory = context.provider.get(async_sessionmaker)
     session = session_factory()
 

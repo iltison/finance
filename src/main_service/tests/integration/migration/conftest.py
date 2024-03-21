@@ -1,7 +1,8 @@
 import pytest
-from main_service.app.config import get_config
-from alembic.config import Config as AlembicConfig
 from alembic.command import downgrade
+from alembic.config import Config as AlembicConfig
+
+from main_service.app.config import get_config
 
 
 @pytest.fixture(scope="function")

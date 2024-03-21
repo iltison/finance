@@ -27,7 +27,9 @@ class GetPortfolioService:
         self.__uow = uow
         self.__repo = repo
 
-    async def execute(self, query: GetPortfolioQuery) -> GetPortfolioQueryResult:
+    async def execute(
+        self, query: GetPortfolioQuery
+    ) -> GetPortfolioQueryResult:
         structlog.contextvars.bind_contextvars()
         async with self.__uow:
             portfolio = await self.__repo.get_by_id(id=query.id)

@@ -21,7 +21,9 @@ class PostgresUOW:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         if exc_type:
-            logger.error("Handled exception", type=exc_type.__name__, exc_info=True)
+            logger.error(
+                "Handled exception", type=exc_type.__name__, exc_info=True
+            )
             await self.rollback()
         else:
             await self._session.commit()

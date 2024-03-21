@@ -1,6 +1,6 @@
 from typing import Protocol, cast
 
-from sqlalchemy import select, insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main_service.app.domain.bond import Bond
