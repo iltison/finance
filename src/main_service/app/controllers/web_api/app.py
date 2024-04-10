@@ -1,43 +1,43 @@
-import logging
+from contextlib import asynccontextmanager
 
-import structlog
-from blacksheep import Application, Router
-from sqlalchemy.ext.asyncio import AsyncEngine
+from dishka import (
+    make_async_container,
+)
+from dishka.integrations.fastapi import (
+    setup_dishka,
+)
+from fastapi import FastAPI
+from sqlalchemy.orm import clear_mappers
 
-from main_service.app.controllers.web_api.routes.home import home_router
-from main_service.app.controllers.web_api.routes.portfolio import (
+from main_service.app.adapters.postgres.map import run_mapper
+from main_service.app.controllers.web_api.handlers.home import home_router
+from main_service.app.controllers.web_api.handlers.portfolio import (
     portfolio_router,
 )
-from main_service.app.di.container import get_container
-
-logger = structlog.get_logger(__name__)
+from main_service.app.di.ioc import AdaptersProvider
 
 
-async def on_shutdown(applications: Application):
-    logger.info("Closed engine")
-    engine = applications.services.provider.get(AsyncEngine, default=None)
-    if engine is None:
-        return None
-
-    await engine.dispose()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await app.state.dishka_container.close()
 
 
 def application_factory():
-    structlog.configure(
-        wrapper_class=structlog.make_filtering_bound_logger(logging.DEBUG),
-    )
+    clear_mappers()
+    run_mapper()
+    app = FastAPI(lifespan=lifespan)
+    app.include_router(home_router)
+    app.include_router(portfolio_router)
+    return app
 
-    containers = get_container()
-    router = Router(
-        sub_routers=[
-            home_router,
-            portfolio_router,
-        ]
-    )
-    app = Application(
-        services=containers, router=router, show_error_details=True
-    )
 
-    app.on_stop += on_shutdown
-
+def production_application_factory():
+    """
+    1. Создание контейнера для di
+    :return:
+    """
+    app = application_factory()
+    container = make_async_container(AdaptersProvider())
+    setup_dishka(container, app)
     return app

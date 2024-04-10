@@ -17,7 +17,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "blacksheep",
     "uvicorn",
     "alembic",
     'psycopg2 ; platform_system != "Linux"',
@@ -27,12 +26,15 @@ dependencies = [
     "aiohttp",
     "httpx",
     "uuid6",
+    "dishka",
+    "fastapi",
     'psycopg2-binary ; platform_system != "Windows"',
 ]
 [project.optional-dependencies]
 test = [
     "pytest",
-    "pytest-asyncio"
+    "pytest-asyncio",
+    "mimesis",
 ]
 lint = [
     "ruff",

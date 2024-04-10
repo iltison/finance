@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date
 
 from main_service.app.domain.portfolio import BondType
 
@@ -38,9 +38,6 @@ class OperationCreateRequest:
     count: int
     date: date
     type: BondType
-
-    def __post_init__(self):
-        self.date = datetime.strptime(self.date, "%Y-%m-%d").date()
 
 
 @dataclass
