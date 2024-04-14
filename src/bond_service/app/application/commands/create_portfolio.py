@@ -2,15 +2,14 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import structlog
-
-from main_service.app.adapters.interface.portfolio_dao import (
+from app.adapters.interface.portfolio_dao import (
     PortfolioDAOInterface,
 )
-from main_service.app.adapters.interface.unit_of_work import UOWInterface
-from main_service.app.application.commands.command import CommandResult
-from main_service.app.domain.const import UUID
-from main_service.app.domain.exeption import ServiceError
-from main_service.app.domain.portfolio import PortfolioAggregate
+from app.adapters.interface.unit_of_work import UOWInterface
+from app.application.commands.command import CommandResult
+from app.domain.const import UUID
+from app.domain.exeption import ServiceError
+from app.domain.portfolio import PortfolioAggregate
 
 logger = structlog.get_logger(__name__)
 

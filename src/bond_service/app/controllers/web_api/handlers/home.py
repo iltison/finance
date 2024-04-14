@@ -1,6 +1,5 @@
+from app.controllers.web_api.schemas.home import HomeResponse
 from fastapi import APIRouter
-
-from main_service.app.controllers.web_api.schemas.home import HomeResponse
 
 home_router = APIRouter()
 

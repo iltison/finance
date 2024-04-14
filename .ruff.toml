@@ -18,9 +18,9 @@ lint.select = [
 
 
 [lint.per-file-ignores]
-"src/main_service/tests/**" = ["TID252", "PLR2004", "S101"]
+"src/bond_service/tests/**" = ["TID252", "PLR2004", "S101"]
 # чтобы не удалялись metadata таблиц
-"src/main_service/app/adapters/postgres/meta.py" = ["F401"]
+"src/bond_service/app/adapters/postgres/meta.py" = ["F401"]
 
 [lint.isort]
 no-lines-before = ["local-folder"]

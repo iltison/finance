@@ -1,27 +1,26 @@
+from app.adapters.interface.unit_of_work import UOWInterface
+from app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
+from app.adapters.postgres.dao.unit_of_work import PostgresUOW
+from app.application.commands.create_bond import CreateBondService
+from app.application.commands.create_operation import (
+    CreateOperationService,
+)
+from app.application.commands.create_portfolio import (
+    CreatePortfolioService,
+)
+from app.application.queries.get_portfolio import (
+    GetPortfolioService,
+)
+from app.application.queries.get_portfolios import (
+    GetPortfoliosService,
+)
+from app.config import Config
 from rodi import ActivationScope
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     async_sessionmaker,
     create_async_engine,
 )
-
-from main_service.app.adapters.interface.unit_of_work import UOWInterface
-from main_service.app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
-from main_service.app.adapters.postgres.dao.unit_of_work import PostgresUOW
-from main_service.app.application.commands.create_bond import CreateBondService
-from main_service.app.application.commands.create_operation import (
-    CreateOperationService,
-)
-from main_service.app.application.commands.create_portfolio import (
-    CreatePortfolioService,
-)
-from main_service.app.application.queries.get_portfolio import (
-    GetPortfolioService,
-)
-from main_service.app.application.queries.get_portfolios import (
-    GetPortfoliosService,
-)
-from main_service.app.config import Config
 
 
 def build_sa_engine(context: ActivationScope) -> AsyncEngine:

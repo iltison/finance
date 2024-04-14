@@ -3,20 +3,19 @@ from typing import Callable
 import pytest
 import pytest_asyncio
 import structlog
-from dishka import AsyncContainer
-from httpx import AsyncClient
-from mimesis.schema import Field, Locale
-
-from main_service.app.adapters.interface.bond_dao import BondDAOInterface
-from main_service.app.adapters.interface.portfolio_dao import (
+from app.adapters.interface.bond_dao import BondDAOInterface
+from app.adapters.interface.portfolio_dao import (
     PortfolioDAOInterface,
 )
-from main_service.app.adapters.interface.unit_of_work import UOWInterface
-from main_service.app.domain.bond import BondAggregate
-from main_service.app.domain.portfolio import (
+from app.adapters.interface.unit_of_work import UOWInterface
+from app.domain.bond import BondAggregate
+from app.domain.portfolio import (
     BondEntity,
     PortfolioAggregate,
 )
+from dishka import AsyncContainer
+from httpx import AsyncClient
+from mimesis.schema import Field, Locale
 
 logger = structlog.get_logger(__name__)
 

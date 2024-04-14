@@ -1,5 +1,27 @@
 from typing import AsyncIterable
 
+from app.adapters.interface.bond_dao import BondDAOInterface
+from app.adapters.interface.portfolio_dao import (
+    PortfolioDAOInterface,
+)
+from app.adapters.interface.unit_of_work import UOWInterface
+from app.adapters.postgres.dao.bond_dao import BondDAO
+from app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
+from app.adapters.postgres.dao.unit_of_work import PostgresUOW
+from app.application.commands.create_bond import CreateBondService
+from app.application.commands.create_operation import (
+    CreateOperationService,
+)
+from app.application.commands.create_portfolio import (
+    CreatePortfolioService,
+)
+from app.application.queries.get_portfolio import (
+    GetPortfolioService,
+)
+from app.application.queries.get_portfolios import (
+    GetPortfoliosService,
+)
+from app.config import get_config
 from dishka import (
     Provider,
     Scope,
@@ -10,36 +32,13 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
-
-from main_service.app.adapters.interface.bond_dao import BondDAOInterface
-from main_service.app.adapters.interface.portfolio_dao import (
-    PortfolioDAOInterface,
-)
-from main_service.app.adapters.interface.unit_of_work import UOWInterface
-from main_service.app.adapters.postgres.dao.bond_dao import BondDAO
-from main_service.app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
-from main_service.app.adapters.postgres.dao.unit_of_work import PostgresUOW
-from main_service.app.application.commands.create_bond import CreateBondService
-from main_service.app.application.commands.create_operation import (
-    CreateOperationService,
-)
-from main_service.app.application.commands.create_portfolio import (
-    CreatePortfolioService,
-)
-from main_service.app.application.queries.get_portfolio import (
-    GetPortfolioService,
-)
-from main_service.app.application.queries.get_portfolios import (
-    GetPortfoliosService,
-)
-from main_service.app.config import get_config
-from main_service.tests.integration.utils.create_database import (
+from tests.integration.utils.create_database import (
     create_database,
 )
-from main_service.tests.integration.utils.delete_database import (
+from tests.integration.utils.delete_database import (
     delete_database,
 )
-from main_service.tests.integration.utils.generate_name import (
+from tests.integration.utils.generate_name import (
     generate_random_name,
 )
 

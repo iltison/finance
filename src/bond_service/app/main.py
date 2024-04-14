@@ -2,9 +2,8 @@ import logging
 import sys
 
 import uvicorn
-
-from main_service.app.config import get_web_config
-from main_service.app.controllers.web_api.app import (
+from app.config import get_web_config
+from app.controllers.web_api.app import (
     production_application_factory,
 )
 

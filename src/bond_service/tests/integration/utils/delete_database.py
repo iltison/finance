@@ -1,8 +1,7 @@
 import psycopg2
 import structlog
+from app.config import get_config
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
-from main_service.app.config import get_config
 
 logger = structlog.get_logger(__name__)
 

@@ -1,5 +1,5 @@
-from main_service.app.adapters.postgres.table.bond import mapper_bond
-from main_service.app.adapters.postgres.table.portfolio import (
+from app.adapters.postgres.table.bond import mapper_bond
+from app.adapters.postgres.table.portfolio import (
     mapper_portfolio,
 )
 
