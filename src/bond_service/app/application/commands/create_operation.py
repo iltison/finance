@@ -2,17 +2,13 @@ from dataclasses import dataclass, field
 from datetime import date
 
 import structlog
-from app.adapters.interface.portfolio_dao import (
-    PortfolioDAOInterface,
-)
+
+from app.adapters.interface.portfolio_dao import PortfolioDAOInterface
 from app.adapters.interface.unit_of_work import UOWInterface
 from app.application.commands.command import CommandResult
 from app.domain.const import UUID
 from app.domain.exeption import ServiceError
-from app.domain.portfolio import (
-    BondOperationVO,
-    BondType,
-)
+from app.domain.portfolio import BondOperationVO, BondType
 
 logger = structlog.get_logger(__name__)
 

@@ -3,8 +3,9 @@ from typing import Unpack
 import pytest
 import pytest_asyncio
 import structlog
-from app.domain.portfolio import BondOperationVO, BondType
 from mimesis import Field, Schema
+
+from app.domain.portfolio import BondOperationVO, BondType
 
 logger = structlog.get_logger(__name__)
 

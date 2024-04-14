@@ -1,6 +1,7 @@
 import pytest
 from alembic.command import downgrade
 from alembic.config import Config as AlembicConfig
+
 from app.config import get_config
 
 

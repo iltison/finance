@@ -1,9 +1,10 @@
 from typing import cast
 
-from app.domain.const import UUID
-from app.domain.portfolio import PortfolioAggregate
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.domain.const import UUID
+from app.domain.portfolio import PortfolioAggregate
 
 
 class PortfolioDAO:

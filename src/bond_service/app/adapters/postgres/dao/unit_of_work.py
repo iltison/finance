@@ -1,5 +1,6 @@
-from app.adapters.interface.unit_of_work import logger
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.adapters.interface.unit_of_work import logger
 
 
 class PostgresUOW:

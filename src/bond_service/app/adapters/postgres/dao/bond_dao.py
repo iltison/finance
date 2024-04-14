@@ -1,9 +1,10 @@
 from typing import cast
 
-from app.domain.bond import BondAggregate
-from app.domain.const import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.domain.bond import BondAggregate
+from app.domain.const import UUID
 
 
 class BondDAO:

@@ -6,12 +6,13 @@ import pytest_asyncio
 import structlog
 from alembic.command import upgrade
 from alembic.config import Config as AlembicConfig
-from app.config import get_config
-from app.controllers.web_api.app import application_factory
 from dishka import AsyncContainer, make_async_container
 from dishka.integrations.fastapi import setup_dishka
 from httpx import AsyncClient
 from tests.integration.utils.provider import TestAdaptersProvider
+
+from app.config import get_config
+from app.controllers.web_api.app import application_factory
 
 logger = structlog.get_logger(__name__)
 

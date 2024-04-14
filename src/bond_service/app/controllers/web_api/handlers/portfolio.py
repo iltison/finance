@@ -1,5 +1,9 @@
 import uuid
 
+from dishka.integrations.fastapi import FromDishka, inject
+from fastapi import APIRouter, Response
+from fastapi.responses import JSONResponse
+
 from app.application.commands.create_bond import (
     CreateBondCommand,
     CreateBondService,
@@ -16,12 +20,8 @@ from app.application.queries.get_portfolio import (
     GetPortfolioQuery,
     GetPortfolioService,
 )
-from app.application.queries.get_portfolios import (
-    GetPortfoliosService,
-)
-from app.controllers.web_api.schemas.additional import (
-    ExceptionResponse,
-)
+from app.application.queries.get_portfolios import GetPortfoliosService
+from app.controllers.web_api.schemas.additional import ExceptionResponse
 from app.controllers.web_api.schemas.portfolio import (
     BondCreateRequest,
     OperationCreateRequest,
@@ -30,12 +30,6 @@ from app.controllers.web_api.schemas.portfolio import (
     PortfolioGetBondResponse,
     PortfolioGetResponse,
 )
-from dishka.integrations.fastapi import (
-    FromDishka,
-    inject,
-)
-from fastapi import APIRouter, Response
-from fastapi.responses import JSONResponse
 
 portfolio_router = APIRouter()
 

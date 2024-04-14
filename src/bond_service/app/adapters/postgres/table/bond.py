@@ -1,7 +1,8 @@
 import sqlalchemy as sa
+from sqlalchemy.sql import func
+
 from app.adapters.postgres.base import mapper_registry, metadata
 from app.domain.bond import BondAggregate
-from sqlalchemy.sql import func
 
 bonds_table = sa.Table(
     "bonds",

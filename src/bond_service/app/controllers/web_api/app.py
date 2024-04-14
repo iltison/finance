@@ -1,19 +1,14 @@
 from contextlib import asynccontextmanager
 
-from app.adapters.postgres.map import run_mapper
-from app.controllers.web_api.handlers.home import home_router
-from app.controllers.web_api.handlers.portfolio import (
-    portfolio_router,
-)
-from app.di.ioc import AdaptersProvider
-from dishka import (
-    make_async_container,
-)
-from dishka.integrations.fastapi import (
-    setup_dishka,
-)
+from dishka import make_async_container
+from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 from sqlalchemy.orm import clear_mappers
+
+from app.adapters.postgres.map import run_mapper
+from app.controllers.web_api.handlers.home import home_router
+from app.controllers.web_api.handlers.portfolio import portfolio_router
+from app.di.ioc import AdaptersProvider
 
 
 @asynccontextmanager

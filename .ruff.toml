@@ -1,13 +1,12 @@
 line-length = 79
 target-version="py311"
-src = ["src"]
+src = []
 
 include = ["src/bond_service/**.py"]
 exclude = ["src/bond_service/app/adapters/postgres/migration/**.py"]
 
 lint.select = [
    "T20", # flake8-print
-   "I", # isort
    "F", # Pyflakes
    "E", # pycodestyle
    "W", # pycodestyle
@@ -15,6 +14,7 @@ lint.select = [
    "ASYNC", # flake8-async
    "ERA", # eradicate
    "ARG", # flake8-unused-arguments
+   "I", # isort
 ]
 
 
@@ -24,7 +24,7 @@ lint.select = [
 "src/bond_service/app/adapters/postgres/meta.py" = ["F401"]
 
 [lint.isort]
-no-lines-before = ["local-folder"]
+known-first-party = ["app"]
 
 [lint.flake8-tidy-imports]
 ban-relative-imports = "parents"

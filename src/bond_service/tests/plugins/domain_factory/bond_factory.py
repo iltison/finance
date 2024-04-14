@@ -3,12 +3,13 @@ from typing import Unpack
 import pytest
 import pytest_asyncio
 import structlog
+from dishka import AsyncContainer
+from mimesis import Field, Locale
+
 from app.adapters.interface.bond_dao import BondDAOInterface
 from app.adapters.interface.unit_of_work import UOWInterface
 from app.domain.bond import BondAggregate
 from app.domain.portfolio import BondEntity
-from dishka import AsyncContainer
-from mimesis import Field, Locale
 
 logger = structlog.get_logger(__name__)
 

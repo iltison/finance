@@ -1,4 +1,8 @@
 import sqlalchemy as sa
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from uuid6 import uuid7
+
 from app.adapters.postgres.base import mapper_registry, metadata
 from app.domain.portfolio import (
     BondEntity,
@@ -6,9 +10,6 @@ from app.domain.portfolio import (
     BondType,
     PortfolioAggregate,
 )
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from uuid6 import uuid7
 
 portfolio_table = sa.Table(
     "portfolios",
