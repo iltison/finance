@@ -34,7 +34,8 @@ from dishka.integrations.fastapi import (
     FromDishka,
     inject,
 )
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
+from fastapi.responses import JSONResponse
 
 portfolio_router = APIRouter()
 
@@ -54,17 +55,29 @@ async def get_portfolios(
 
 
 @portfolio_router.get(
-    "/portfolios/{portfolio_id}", responses={409: {"model": ExceptionResponse}}
+    "/portfolios/{portfolio_id}",
+    responses={
+        409: {"model": ExceptionResponse},
+        404: {"model": ExceptionResponse},
+        200: {"model": PortfolioGetResponse},
+    },
+    response_model=None,
 )
 @inject
 async def get_portfolio(
     portfolio_id: uuid.UUID, service: FromDishka[GetPortfolioService]
-) -> PortfolioGetResponse | ExceptionResponse:
+) -> PortfolioGetResponse | Response:
     query = GetPortfolioQuery(id=portfolio_id)
     result = await service.execute(query)
 
     if len(result.errors) != 0:
-        return ExceptionResponse(message=str(result.errors))
+        return JSONResponse(
+            status_code=409, content={"message": str(result.errors)}
+        )
+    elif result.payload is None:
+        return JSONResponse(
+            status_code=404, content={"message": "Item not found"}
+        )
 
     return PortfolioGetResponse(
         id=result.payload.id,
