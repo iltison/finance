@@ -4,7 +4,6 @@ import pytest
 import pytest_asyncio
 import structlog
 from app.domain.portfolio import BondOperationVO, BondType
-from dishka import AsyncContainer
 from mimesis import Field, Schema
 
 logger = structlog.get_logger(__name__)
@@ -14,7 +13,7 @@ logger = structlog.get_logger(__name__)
 def operation_factory():
     def factory(**fields: Unpack[BondOperationVO]) -> BondOperationVO:
         # TODO: придумать как чтобы параметры передавались в датакласс явно
-        def _random_type(random, **kwargs):
+        def _random_type(random):
             return random.choice([BondType.purchase, BondType.sell])
 
         mf = Field()
@@ -40,7 +39,7 @@ def operation_factory():
 
 
 @pytest_asyncio.fixture
-async def operation_builder(container: AsyncContainer, operation_factory):
+async def operation_builder(operation_factory):
     async def builder(**fields: Unpack[BondOperationVO]):
         operation_vo = operation_factory(**fields)
 
