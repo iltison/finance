@@ -14,8 +14,8 @@ logger = structlog.get_logger(__name__)
 def operation_factory():
     def factory(**fields: Unpack[BondOperationVO]) -> BondOperationVO:
         # TODO: придумать как чтобы параметры передавались в датакласс явно
-        def _random_type(random):
-            return random.choice([BondType.purchase, BondType.sell])
+        def _random_type(random, **kwargs):
+            return random.choice([BondType.purchase, BondType.sell], **kwargs)
 
         mf = Field()
         mf.register_handler("random_type", _random_type)
