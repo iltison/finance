@@ -10,9 +10,9 @@ from alembic.config import Config as AlembicConfig
 from dishka import AsyncContainer, make_async_container
 from dishka.integrations.fastapi import setup_dishka
 from httpx import AsyncClient
-from tests.integration.utils.provider import TestAdaptersProvider
 
 from app.controllers.web_api.app import application_factory
+from tests.integration.utils.provider import TestAdaptersProvider
 
 logger = structlog.get_logger(__name__)
 

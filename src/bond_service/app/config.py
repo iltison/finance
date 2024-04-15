@@ -1,5 +1,5 @@
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -16,11 +16,6 @@ class DBConfig:
     database: str = "postgres"
     login: str = "postgres"
     password: str = "postgres"
-
-
-@dataclass
-class Config:
-    database: DBConfig = field(default_factory=DBConfig)
 
 
 def get_web_config() -> WebConfig:

@@ -6,11 +6,11 @@ from dishka import Scope, provide
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
 )
+
+from app.di.ioc import AdaptersProvider
 from tests.integration.utils.create_database import create_database
 from tests.integration.utils.delete_database import delete_database
 from tests.integration.utils.generate_name import generate_random_name
-
-from app.di.ioc import AdaptersProvider
 
 logger = structlog.get_logger(__name__)
 

@@ -19,7 +19,7 @@ lint.select = [
 
 
 [lint.isort]
-known-first-party = ["app"]
+known-first-party = ["app", "tests"]
 
 [lint.flake8-tidy-imports]
 ban-relative-imports = "parents"

@@ -5,11 +5,11 @@ import pytest_asyncio
 import structlog
 from dishka import AsyncContainer
 from mimesis import Field, Locale, Schema
-from tests.plugins.domain_factory.interface import PortfolioFactoryInterface
 
 from app.adapters.interface.portfolio_dao import PortfolioDAOInterface
 from app.adapters.interface.unit_of_work import UOWInterface
 from app.domain.portfolio import PortfolioAggregate
+from tests.plugins.domain_factory.interface import PortfolioFactoryInterface
 
 logger = structlog.get_logger(__name__)
 
