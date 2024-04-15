@@ -1,3 +1,4 @@
+import os
 from typing import AsyncIterable
 
 import httpx
@@ -11,7 +12,6 @@ from dishka.integrations.fastapi import setup_dishka
 from httpx import AsyncClient
 from tests.integration.utils.provider import TestAdaptersProvider
 
-from app.config import get_config
 from app.controllers.web_api.app import application_factory
 
 logger = structlog.get_logger(__name__)
@@ -20,13 +20,12 @@ logger = structlog.get_logger(__name__)
 @pytest.fixture(scope="module", autouse=True)
 def migration():
     """
-    Накатывание последней версии миграции на теестовую таблицу
+    Накатывание последней версии миграции на тестовую базу
     :return:
     """
-    config = get_config()
-    postgres_url = f"postgresql://{config.database.login}:{config.database.password}@{config.database.host}:{config.database.port}/reference"
+    os.environ["DB_DATABASE"] = "reference"
+
     alembic_cfg = AlembicConfig("alembic.ini")
-    alembic_cfg.set_main_option("sqlalchemy.url", postgres_url)
     upgrade(alembic_cfg, "head")
 
 

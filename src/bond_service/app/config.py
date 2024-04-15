@@ -28,11 +28,7 @@ def get_web_config() -> WebConfig:
 
 
 def get_db_config() -> DBConfig:
-    return DBConfig()
-
-
-def get_config() -> Config:
-    config = Config()
-    database = os.getenv("DB_DATABASE", config.database.database)
-    config.database.database = database
+    config = DBConfig()
+    database = os.getenv("DB_DATABASE", config.database)
+    config.database = database
     return config

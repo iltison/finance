@@ -1,5 +1,6 @@
 from typing import AsyncIterable
 
+import structlog
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -18,7 +19,9 @@ from app.application.commands.create_operation import CreateOperationService
 from app.application.commands.create_portfolio import CreatePortfolioService
 from app.application.queries.get_portfolio import GetPortfolioService
 from app.application.queries.get_portfolios import GetPortfoliosService
-from app.config import get_config
+from app.config import get_db_config
+
+logger = structlog.get_logger(__name__)
 
 
 # app dependency logic
@@ -37,9 +40,9 @@ class AdaptersProvider(Provider):
 
     @provide
     async def build_sa_sessionmaker(self) -> AsyncIterable[AsyncSession]:
-        config = get_config()
+        config = get_db_config()
         engine = create_async_engine(
-            f"postgresql+asyncpg://{config.database.login}:{config.database.password}@{config.database.host}:{config.database.port}/{config.database.database}",
+            f"postgresql+asyncpg://{config.login}:{config.password}@{config.host}:{config.port}/{config.database}",
             echo=False,
         )
         session = async_sessionmaker(engine, expire_on_commit=False)()
