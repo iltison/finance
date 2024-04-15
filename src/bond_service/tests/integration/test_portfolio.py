@@ -1,6 +1,13 @@
 import pytest
 import structlog
 from httpx import AsyncClient
+from tests.plugins.domain_factory.interface import (
+    BondBuilderInterface,
+    OperationBuilderInterface,
+    OperationFactoryInterface,
+    PortfolioBuilderInterface,
+    PortfolioFactoryInterface,
+)
 
 logger = structlog.get_logger(__name__)
 
@@ -8,9 +15,9 @@ logger = structlog.get_logger(__name__)
 @pytest.mark.asyncio
 async def test_get_existing_portfolio(
     test_client: AsyncClient,
-    bond_builder,
-    portfolio_builder,
-    operation_builder,
+    bond_builder: BondBuilderInterface,
+    portfolio_builder: PortfolioBuilderInterface,
+    operation_builder: OperationBuilderInterface,
 ):
     operation = await operation_builder()
     bond = await bond_builder(operations=[operation])
@@ -24,7 +31,7 @@ async def test_get_existing_portfolio(
 
 @pytest.mark.asyncio
 async def test_get_non_existing_portfolio(
-    test_client: AsyncClient, portfolio_factory
+    test_client: AsyncClient, portfolio_factory: PortfolioFactoryInterface
 ):
     portfolio = portfolio_factory()
     response = await test_client.get(f"/portfolios/{str(portfolio.id)}")
@@ -34,7 +41,9 @@ async def test_get_non_existing_portfolio(
 
 
 @pytest.mark.asyncio
-async def test_create_portfolio(test_client: AsyncClient, portfolio_factory):
+async def test_create_portfolio(
+    test_client: AsyncClient, portfolio_factory: PortfolioFactoryInterface
+):
     portfolio = portfolio_factory()
 
     response = await test_client.post(
@@ -49,9 +58,9 @@ async def test_create_portfolio(test_client: AsyncClient, portfolio_factory):
 @pytest.mark.asyncio
 async def test_get_existing_portfolios(
     test_client: AsyncClient,
-    bond_builder,
-    portfolio_builder,
-    operation_builder,
+    bond_builder: BondBuilderInterface,
+    portfolio_builder: PortfolioBuilderInterface,
+    operation_builder: OperationBuilderInterface,
 ):
     operation = await operation_builder()
     bond = await bond_builder(operations=[operation])
@@ -82,8 +91,8 @@ async def test_get_non_existing_portfolios(test_client: AsyncClient):
 @pytest.mark.asyncio
 async def test_create_portfolio_bond(
     test_client: AsyncClient,
-    bond_builder,
-    portfolio_builder,
+    bond_builder: BondBuilderInterface,
+    portfolio_builder: PortfolioBuilderInterface,
 ):
     bond = await bond_builder()
     portfolio = await portfolio_builder()
@@ -99,9 +108,9 @@ async def test_create_portfolio_bond(
 @pytest.mark.asyncio
 async def test_create_portfolio_operation(
     test_client: AsyncClient,
-    bond_builder,
-    portfolio_builder,
-    operation_factory,
+    bond_builder: BondBuilderInterface,
+    portfolio_builder: PortfolioBuilderInterface,
+    operation_factory: OperationFactoryInterface,
 ):
     operation = operation_factory()
     bond = await bond_builder()

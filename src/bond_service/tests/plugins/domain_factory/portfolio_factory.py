@@ -1,21 +1,21 @@
-from typing import Unpack
+from typing import Awaitable, Callable, Unpack
 
 import pytest
 import pytest_asyncio
 import structlog
 from dishka import AsyncContainer
 from mimesis import Field, Locale, Schema
+from tests.plugins.domain_factory.interface import PortfolioFactoryInterface
 
 from app.adapters.interface.portfolio_dao import PortfolioDAOInterface
 from app.adapters.interface.unit_of_work import UOWInterface
-from app.domain.bond import BondAggregate
 from app.domain.portfolio import PortfolioAggregate
 
 logger = structlog.get_logger(__name__)
 
 
 @pytest.fixture(params=[Locale.RU, Locale.EN], scope="function")
-def portfolio_factory(request):
+def portfolio_factory(request) -> Callable[[], PortfolioAggregate]:
     def factory(**fields: Unpack[PortfolioAggregate]) -> PortfolioAggregate:
         # TODO: придумать как чтобы параметры передавались в датакласс явно
         mf = Field(locale=request.param)
@@ -36,8 +36,12 @@ def portfolio_factory(request):
 
 
 @pytest_asyncio.fixture
-async def portfolio_builder(container: AsyncContainer, portfolio_factory):
-    async def builder(**fields: Unpack[BondAggregate]):
+async def portfolio_builder(
+    container: AsyncContainer, portfolio_factory: PortfolioFactoryInterface
+) -> Callable[[], Awaitable[PortfolioAggregate]]:
+    async def builder(
+        **fields: Unpack[PortfolioAggregate],
+    ) -> PortfolioAggregate:
         uow = await container.get(UOWInterface)
         repo = await container.get(PortfolioDAOInterface)
 

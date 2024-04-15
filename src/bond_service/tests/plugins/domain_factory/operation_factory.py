@@ -1,4 +1,4 @@
-from typing import Unpack
+from typing import Awaitable, Callable, Unpack
 
 import pytest
 import pytest_asyncio
@@ -11,7 +11,7 @@ logger = structlog.get_logger(__name__)
 
 
 @pytest.fixture(scope="function")
-def operation_factory():
+def operation_factory() -> Callable[[], BondOperationVO]:
     def factory(**fields: Unpack[BondOperationVO]) -> BondOperationVO:
         # TODO: придумать как чтобы параметры передавались в датакласс явно
         def _random_type(random, **kwargs):
@@ -40,8 +40,10 @@ def operation_factory():
 
 
 @pytest_asyncio.fixture
-async def operation_builder(operation_factory):
-    async def builder(**fields: Unpack[BondOperationVO]):
+async def operation_builder(
+    operation_factory,
+) -> Callable[[], Awaitable[BondOperationVO]]:
+    async def builder(**fields: Unpack[BondOperationVO]) -> BondOperationVO:
         operation_vo = operation_factory(**fields)
 
         logger.debug("Added test operation", uuid=operation_vo.id)

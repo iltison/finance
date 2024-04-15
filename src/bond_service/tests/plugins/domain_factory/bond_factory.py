@@ -1,4 +1,4 @@
-from typing import Unpack
+from typing import Awaitable, Callable, Unpack
 
 import pytest
 import pytest_asyncio
@@ -15,9 +15,10 @@ logger = structlog.get_logger(__name__)
 
 
 @pytest.fixture(scope="function")
-def _bond_factory():
+def _bond_factory() -> Callable[[], BondAggregate]:
     """
-    Генерация Агрегата облигации
+    Генерация Агрегата облигации, тк в системе должна находиться облигация
+    при добавлении
     :return:
     """
 
@@ -33,7 +34,7 @@ def _bond_factory():
 
 
 @pytest.fixture(scope="function")
-def bond_factory():
+def bond_factory() -> Callable[[], BondEntity]:
     """
     Генерация Сущности облигации
     :return:
@@ -51,8 +52,16 @@ def bond_factory():
 
 
 @pytest_asyncio.fixture
-async def _bond_builder(container: AsyncContainer, _bond_factory):
-    async def builder(**fields: Unpack[BondAggregate]):
+async def _bond_builder(
+    container: AsyncContainer, _bond_factory
+) -> Callable[[], Awaitable[BondAggregate]]:
+    """
+    Создание Агрегата облигации, тк в системе должна находиться облигация
+    при добавлении
+    :return:
+    """
+
+    async def builder(**fields: Unpack[BondAggregate]) -> BondAggregate:
         uow = await container.get(UOWInterface)
         repo = await container.get(BondDAOInterface)
 
@@ -73,8 +82,10 @@ async def _bond_builder(container: AsyncContainer, _bond_factory):
 
 
 @pytest_asyncio.fixture
-async def bond_builder(bond_factory, _bond_builder):
-    async def builder(**fields: Unpack[BondAggregate]):
+async def bond_builder(
+    bond_factory, _bond_builder
+) -> Callable[[], Awaitable[BondEntity]]:
+    async def builder(**fields: Unpack[BondEntity]) -> BondEntity:
         bond_entity = bond_factory(**fields)
         bond_aggregate = await _bond_builder(isin=bond_entity.bond_isin)
 
