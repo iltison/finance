@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from sqlalchemy.orm import clear_mappers
 
 from app.adapters.postgres.map import run_mapper
+from app.config.logging import configure_logger
 from app.controllers.web_api.handlers.home import home_router
 from app.controllers.web_api.handlers.portfolio import portfolio_router
 from app.di.ioc import AdaptersProvider
@@ -31,6 +32,7 @@ def production_application_factory():
     1. Создание контейнера для di
     :return:
     """
+    configure_logger()
     app = application_factory()
     container = make_async_container(AdaptersProvider())
     setup_dishka(container, app)

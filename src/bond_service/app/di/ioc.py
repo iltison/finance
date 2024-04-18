@@ -19,7 +19,7 @@ from app.application.commands.create_operation import CreateOperationService
 from app.application.commands.create_portfolio import CreatePortfolioService
 from app.application.queries.get_portfolio import GetPortfolioService
 from app.application.queries.get_portfolios import GetPortfoliosService
-from app.config import get_db_config
+from app.config.config import get_db_config
 
 logger = structlog.get_logger(__name__)
 
