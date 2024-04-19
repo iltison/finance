@@ -4,7 +4,7 @@ from typing import AsyncIterable
 import structlog
 from dishka import Scope, provide
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
+    AsyncEngine,
 )
 
 from app.di.ioc import AdaptersProvider
@@ -22,13 +22,13 @@ class TestAdaptersProvider(AdaptersProvider):
 
     scope = Scope.APP
 
-    @provide
-    async def build_sa_sessionmaker(self) -> AsyncIterable[AsyncSession]:
+    @provide(scope=Scope.APP)
+    async def build_engine(self) -> AsyncIterable[AsyncEngine]:
         db_name = generate_random_name()
         create_database(db_name)
 
         os.environ["DB_DATABASE"] = db_name
-        async for v in super().build_sa_sessionmaker():
+        async for v in super().build_engine():
             yield v
 
         delete_database(db_name)
