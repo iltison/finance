@@ -1,6 +1,6 @@
 from typing import Awaitable, Protocol
 
-from app.domain.portfolio import (
+from app.domains.portfolio import (
     BondEntity,
     BondOperationVO,
     PortfolioAggregate,

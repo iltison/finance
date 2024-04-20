@@ -2,7 +2,7 @@ import enum
 from dataclasses import dataclass, field
 from datetime import date
 
-from app.domain.const import UUID
+from app.domains.const import UUID
 
 
 class BondType(enum.Enum):

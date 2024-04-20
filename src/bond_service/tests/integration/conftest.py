@@ -11,7 +11,7 @@ from dishka import AsyncContainer, make_async_container
 from dishka.integrations.fastapi import setup_dishka
 from httpx import AsyncClient
 
-from app.controllers.web_api.app import application_factory
+from app.controllers.rest_api.app import application_factory
 from tests.integration.utils.provider import TestAdaptersProvider
 
 logger = structlog.get_logger(__name__)

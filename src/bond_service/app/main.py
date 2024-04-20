@@ -1,7 +1,7 @@
 import uvicorn
 
-from app.config.config import get_web_config
-from app.controllers.web_api.app import production_application_factory
+from app.configs.config import get_web_config
+from app.controllers.rest_api.app import production_application_factory
 
 app = production_application_factory()
 

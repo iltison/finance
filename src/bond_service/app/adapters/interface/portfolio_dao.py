@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from app.domain.const import UUID
-from app.domain.portfolio import PortfolioAggregate
+from app.domains.const import UUID
+from app.domains.portfolio import PortfolioAggregate
 
 
 class PortfolioDAOInterface(Protocol):

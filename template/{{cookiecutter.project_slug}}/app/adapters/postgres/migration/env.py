@@ -14,7 +14,7 @@ config_db = get_db_config()
 db_uri = f"postgresql://{config_db.login}:{config_db.password}@{config_db.host}:{config_db.port}/{config_db.database}"
 
 config.set_main_option("sqlalchemy.url", db_uri)
-# Interpret the config file for Python logging.
+# Interpret the configs file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -25,9 +25,9 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = target_metadata
 
-# other values from the config, defined by the needs of env.py,
+# other values from the configs, defined by the needs of env.py,
 # can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
+# my_important_option = configs.get_main_option("my_important_option")
 # ... etc.
 
 

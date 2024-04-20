@@ -1,7 +1,7 @@
 import structlog
 from fastapi import APIRouter
 
-from app.controllers.web_api.schemas.home import HomeResponse
+from app.controllers.rest_api.schemas.home import HomeResponse
 
 home_router = APIRouter()
 

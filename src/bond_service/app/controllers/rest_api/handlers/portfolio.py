@@ -4,25 +4,25 @@ from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter, Response
 from fastapi.responses import JSONResponse
 
-from app.application.commands.create_bond import (
+from app.applications.commands.create_bond import (
     CreateBondCommand,
     CreateBondService,
 )
-from app.application.commands.create_operation import (
+from app.applications.commands.create_operation import (
     CreateOperationCommand,
     CreateOperationService,
 )
-from app.application.commands.create_portfolio import (
+from app.applications.commands.create_portfolio import (
     CreatePortfolioCommand,
     CreatePortfolioService,
 )
-from app.application.queries.get_portfolio import (
+from app.applications.queries.get_portfolio import (
     GetPortfolioQuery,
     GetPortfolioService,
 )
-from app.application.queries.get_portfolios import GetPortfoliosService
-from app.controllers.web_api.schemas.additional import ExceptionResponse
-from app.controllers.web_api.schemas.portfolio import (
+from app.applications.queries.get_portfolios import GetPortfoliosService
+from app.controllers.rest_api.schemas.additional import ExceptionResponse
+from app.controllers.rest_api.schemas.portfolio import (
     BondCreateRequest,
     OperationCreateRequest,
     PortfolioCreateRequest,

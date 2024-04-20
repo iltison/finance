@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 from uuid6 import uuid7
 
 from app.adapters.postgres.base import mapper_registry, metadata
-from app.domain.portfolio import (
+from app.domains.portfolio import (
     BondEntity,
     BondOperationVO,
     BondType,

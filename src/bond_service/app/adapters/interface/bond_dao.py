@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from app.domain.bond import BondAggregate
-from app.domain.const import UUID
+from app.domains.bond import BondAggregate
+from app.domains.const import UUID
 
 
 class BondDAOInterface(Protocol):

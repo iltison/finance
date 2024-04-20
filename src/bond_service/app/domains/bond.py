@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from app.domain.const import UUID
+from app.domains.const import UUID
 
 
 @dataclass

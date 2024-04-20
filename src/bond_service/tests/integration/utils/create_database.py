@@ -2,7 +2,7 @@ import psycopg2
 import structlog
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-from app.config.config import get_db_config
+from app.configs.config import get_db_config
 
 logger = structlog.get_logger(__name__)
 

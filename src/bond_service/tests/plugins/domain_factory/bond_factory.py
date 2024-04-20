@@ -8,8 +8,8 @@ from mimesis import Field, Locale
 
 from app.adapters.interface.bond_dao import BondDAOInterface
 from app.adapters.interface.unit_of_work import UOWInterface
-from app.domain.bond import BondAggregate
-from app.domain.portfolio import BondEntity
+from app.domains.bond import BondAggregate
+from app.domains.portfolio import BondEntity
 
 logger = structlog.get_logger(__name__)
 

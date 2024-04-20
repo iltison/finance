@@ -2,7 +2,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import date
 
-from app.domain.portfolio import BondType
+from app.domains.portfolio import BondType
 
 
 @dataclass
