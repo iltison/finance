@@ -3,7 +3,10 @@ target-version="py311"
 src = []
 
 include = ["src/bond_service/**.py"]
-exclude = ["src/bond_service/app/adapters/postgres/migration/**.py"]
+exclude = [
+   "src/bond_service/app/adapters/postgres/migration/**.py",
+   "template/**"
+]
 
 lint.select = [
    "T20", # flake8-print

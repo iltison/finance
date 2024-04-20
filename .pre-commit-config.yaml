@@ -1,4 +1,4 @@
-exclude: "^docs/|/src/bond_service/migrations/"
+exclude: "^docs/|^template/|/src/bond_service/migrations/"
 default_stages: [commit]
 
 repos:

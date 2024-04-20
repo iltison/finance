@@ -42,3 +42,6 @@ lint = [
     "pre-commit",
     "vulture",
 ]
+arch = [
+    "cookiecutter",
+]
