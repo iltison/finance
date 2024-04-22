@@ -8,9 +8,12 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: reference
+      POSTGRES_BOND_DATABASES: bond
+      POSTGRES_PORTFOLIO_DATABASES: portfolio
+      POSTGRES_TEST_BOND_DATABASES: reference_bond
+      POSTGRES_TEST_PORTFOLIO_DATABASES: reference_portfolio
     healthcheck:
-      test: pg_isready --username "postgres" --dbname "reference"
+      test: pg_isready --username "postgres" --dbname "postgres"
       interval: 1s
       retries: 5
       timeout: 5s

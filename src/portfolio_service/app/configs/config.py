@@ -13,7 +13,7 @@ class WebConfig:
 class DBConfig:
     host: str = "localhost"
     port: int = 5432
-    database: str = "postgres"
+    database: str = "portfolio"
     login: str = "postgres"
     password: str = "postgres"
 
