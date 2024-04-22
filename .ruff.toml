@@ -2,7 +2,10 @@ line-length = 79
 target-version="py311"
 src = []
 
-include = ["src/bond_service/**.py"]
+include = [
+   "src/bond_service/**.py",
+   "src/portfolio_service/**.py",
+]
 exclude = [
    "src/bond_service/app/adapters/postgres/migration/**.py",
    "src/portfolio_service/app/adapters/postgres/migration/**.py",
