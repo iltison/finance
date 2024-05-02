@@ -1,6 +1,7 @@
 /src/main.egg-info/
 /src/.pytest_cache/
 .idea
+.run
 .ipynb_checkpoints
 .mypy_cache
 .vscode
