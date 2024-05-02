@@ -12,6 +12,7 @@ from dishka.integrations.fastapi import setup_dishka
 from httpx import AsyncClient
 
 from app.controllers.rest_api.app import application_factory
+from tests.integration.configs.config import get_reference_name_database
 from tests.integration.utils.provider import TestAdaptersProvider
 
 logger = structlog.get_logger(__name__)
@@ -23,7 +24,7 @@ def migration():
     Накатывание последней версии миграции на тестовую базу
     :return:
     """
-    os.environ["DB_DATABASE"] = "reference"
+    os.environ["DB_DATABASE"] = get_reference_name_database()
 
     alembic_cfg = AlembicConfig("alembic.ini")
     upgrade(alembic_cfg, "head")

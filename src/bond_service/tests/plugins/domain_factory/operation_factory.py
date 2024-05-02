@@ -5,14 +5,14 @@ import pytest_asyncio
 import structlog
 from mimesis import Field, Schema
 
-from app.domains.portfolio import BondOperationVO, BondType
+from app.domains.portfolio import BondOperationEntity, BondType
 
 logger = structlog.get_logger(__name__)
 
 
 @pytest.fixture(scope="function")
-def operation_factory() -> Callable[[], BondOperationVO]:
-    def factory(**fields: Unpack[BondOperationVO]) -> BondOperationVO:
+def operation_factory() -> Callable[[], BondOperationEntity]:
+    def factory(**fields: Unpack[BondOperationEntity]) -> BondOperationEntity:
         # TODO: придумать как чтобы параметры передавались в датакласс явно
         def _random_type(random, **kwargs):
             return random.choice([BondType.purchase, BondType.sell], **kwargs)
@@ -29,7 +29,7 @@ def operation_factory() -> Callable[[], BondOperationVO]:
             }
         )
 
-        return BondOperationVO(
+        return BondOperationEntity(
             **{
                 **schema_operation.create()[0],
                 **fields,
@@ -42,8 +42,10 @@ def operation_factory() -> Callable[[], BondOperationVO]:
 @pytest_asyncio.fixture
 async def operation_builder(
     operation_factory,
-) -> Callable[[], Awaitable[BondOperationVO]]:
-    async def builder(**fields: Unpack[BondOperationVO]) -> BondOperationVO:
+) -> Callable[[], Awaitable[BondOperationEntity]]:
+    async def builder(
+        **fields: Unpack[BondOperationEntity],
+    ) -> BondOperationEntity:
         operation_vo = operation_factory(**fields)
 
         logger.debug("Added test operation", uuid=operation_vo.id)

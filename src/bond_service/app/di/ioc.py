@@ -17,9 +17,6 @@ from app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
 from app.adapters.postgres.dao.unit_of_work import PostgresUOW
 from app.applications.commands.create_bond import CreateBondService
 from app.applications.commands.create_operation import CreateOperationService
-from app.applications.commands.create_portfolio import CreatePortfolioService
-from app.applications.queries.get_portfolio import GetPortfolioService
-from app.applications.queries.get_portfolios import GetPortfoliosService
 from app.configs.config import get_db_config
 
 logger = structlog.get_logger(__name__)
@@ -33,10 +30,7 @@ class AdaptersProvider(Provider):
 
     portfolio_dao = provide(PortfolioDAO, provides=PortfolioDAOInterface)
     bond_dao = provide(BondDAO, provides=BondDAOInterface)
-    get_portfolios_service = provide(GetPortfoliosService)
     create_bond_service = provide(CreateBondService)
-    get_portfolio_service = provide(GetPortfolioService)
-    create_portfolio_service = provide(CreatePortfolioService)
     create_operation_service = provide(CreateOperationService)
 
     @provide
@@ -57,7 +51,7 @@ class AdaptersProvider(Provider):
             query_cache_size=1200,
             pool_size=100,
             max_overflow=200,
-            echo=True,
+            echo=False,
             echo_pool=True,
         )
         yield engine

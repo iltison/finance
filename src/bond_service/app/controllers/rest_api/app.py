@@ -7,8 +7,8 @@ from sqlalchemy.orm import clear_mappers
 
 from app.adapters.postgres.map import run_mapper
 from app.configs.logging import configure_logger
+from app.controllers.rest_api.handlers.bond import bond_router
 from app.controllers.rest_api.handlers.home import home_router
-from app.controllers.rest_api.handlers.portfolio import portfolio_router
 from app.di.ioc import AdaptersProvider
 
 
@@ -23,7 +23,7 @@ def application_factory():
     run_mapper()
     app = FastAPI(lifespan=lifespan)
     app.include_router(home_router)
-    app.include_router(portfolio_router)
+    app.include_router(bond_router)
     return app
 
 

@@ -11,7 +11,7 @@ class BondType(enum.Enum):
 
 
 @dataclass
-class BondOperationVO:
+class BondOperationEntity:
     price_per_piece: float
     count: int
     date: date
@@ -23,12 +23,11 @@ class BondOperationVO:
 class BondEntity:
     bond_isin: str
     id: UUID = field(default_factory=UUID)
-    operations: list[BondOperationVO] = field(default_factory=list)
+    operations: list[BondOperationEntity] = field(default_factory=list)
 
 
 @dataclass
 class PortfolioAggregate:
-    name: str
     id: UUID = field(default_factory=UUID)
     bonds: list[BondEntity] = field(default_factory=list)
 
@@ -40,7 +39,9 @@ class PortfolioAggregate:
         """
         self.bonds.append(bond)
 
-    def add_bond_operation(self, bond_id: UUID, operation: BondOperationVO):
+    def add_bond_operation(
+        self, bond_id: UUID, operation: BondOperationEntity
+    ):
         """
         Добавление операции
         :param bond_id:

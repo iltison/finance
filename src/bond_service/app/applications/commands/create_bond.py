@@ -7,7 +7,7 @@ from app.adapters.interface.unit_of_work import UOWInterface
 from app.applications.commands.command import CommandResult
 from app.domains.const import UUID
 from app.domains.exeption import ServiceError
-from app.domains.portfolio import BondEntity
+from app.domains.portfolio import BondEntity, PortfolioAggregate
 
 logger = structlog.get_logger(__name__)
 
@@ -35,6 +35,10 @@ class CreateBondService:
         structlog.contextvars.bind_contextvars(bond_isin=command.isin)
         async with self.__uow:
             portfolio = await self.__repo.get_by_id(command.portfolio_id)
+            # create portfolio if not exist
+            if portfolio is None:
+                portfolio = PortfolioAggregate(id=command.portfolio_id)
+
             bond = BondEntity(bond_isin=command.isin)
             portfolio.add_bond(bond)
             await self.__repo.update(portfolio)

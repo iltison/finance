@@ -8,7 +8,7 @@ from app.adapters.interface.unit_of_work import UOWInterface
 from app.applications.commands.command import CommandResult
 from app.domains.const import UUID
 from app.domains.exeption import ServiceError
-from app.domains.portfolio import BondOperationVO, BondType
+from app.domains.portfolio import BondOperationEntity, BondType
 
 logger = structlog.get_logger(__name__)
 
@@ -43,7 +43,7 @@ class CreateOperationService:
 
         async with self.__uow:
             portfolio = await self.__repo.get_by_id(command.portfolio_id)
-            operation = BondOperationVO(
+            operation = BondOperationEntity(
                 price_per_piece=command.price_per_piece,
                 count=command.count,
                 date=command.date,

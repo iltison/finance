@@ -2,13 +2,13 @@ from typing import Awaitable, Protocol
 
 from app.domains.portfolio import (
     BondEntity,
-    BondOperationVO,
+    BondOperationEntity,
     PortfolioAggregate,
 )
 
 
 class OperationFactoryInterface(Protocol):
-    def __call__(self, *args, **kwargs) -> BondOperationVO:
+    def __call__(self, *args, **kwargs) -> BondOperationEntity:
         """
         Operation data factory interface
         :param args:
@@ -38,7 +38,7 @@ class PortfolioFactoryInterface(Protocol):
 
 
 class OperationBuilderInterface(Protocol):
-    def __call__(self, *args, **kwargs) -> Awaitable[BondOperationVO]:
+    def __call__(self, *args, **kwargs) -> Awaitable[BondOperationEntity]:
         """
         Operation data builder interface
         :param args:

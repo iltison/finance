@@ -6,7 +6,7 @@ from uuid6 import uuid7
 from app.adapters.postgres.base import mapper_registry, metadata
 from app.domains.portfolio import (
     BondEntity,
-    BondOperationVO,
+    BondOperationEntity,
     BondType,
     PortfolioAggregate,
 )
@@ -23,7 +23,6 @@ portfolio_table = sa.Table(
         unique=True,
         comment="Идентификатор",
     ),
-    sa.Column("name", sa.String, comment="Наименование облигации"),
     sa.Column(
         "created_at",
         sa.DateTime,
@@ -99,7 +98,7 @@ operations_table = sa.Table(
 
 def mapper_portfolio():
     mapper_registry.map_imperatively(
-        BondOperationVO,
+        BondOperationEntity,
         operations_table,
     )
 
@@ -107,7 +106,7 @@ def mapper_portfolio():
         BondEntity,
         portfolio_bonds_table,
         properties={
-            "operations": relationship(BondOperationVO, lazy="subquery")
+            "operations": relationship(BondOperationEntity, lazy="subquery")
         },
     )
 
