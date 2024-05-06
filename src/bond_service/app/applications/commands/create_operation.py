@@ -3,8 +3,7 @@ from datetime import date
 
 import structlog
 
-from app.adapters.interface.portfolio_dao import PortfolioDAOInterface
-from app.adapters.interface.unit_of_work import UOWInterface
+from app.adapters.interface.portfolio_gateway import PortfolioGatewayInterface
 from app.applications.commands.command import CommandResult
 from app.domains.const import UUID
 from app.domains.exeption import ServiceError
@@ -30,9 +29,8 @@ class CommandCreateOperationResult(CommandResult):
 
 
 class CreateOperationService:
-    def __init__(self, uow: UOWInterface, repo: PortfolioDAOInterface):
-        self.__uow = uow
-        self.__repo = repo
+    def __init__(self, gateway: PortfolioGatewayInterface):
+        self.__gateway = gateway
 
     async def execute(
         self, command: CreateOperationCommand
@@ -41,8 +39,8 @@ class CreateOperationService:
             portfolio_id=command.portfolio_id, bond_id=command.bond_id
         )
 
-        async with self.__uow:
-            portfolio = await self.__repo.get_by_id(command.portfolio_id)
+        async with self.__gateway as gateway:
+            portfolio = await gateway.get_portfolio_by_id(command.portfolio_id)
             operation = BondOperationEntity(
                 price_per_piece=command.price_per_piece,
                 count=command.count,
@@ -50,7 +48,7 @@ class CreateOperationService:
                 type=command.type,
             )
             portfolio.add_bond_operation(command.bond_id, operation=operation)
-            await self.__repo.update(portfolio)
+            await gateway.update(portfolio)
 
         logger.info("Operation created", operation_id=operation.id)
         return CommandCreateOperationResult().ok()

@@ -1,10 +1,10 @@
-from dataclasses import dataclass, field
-
-from app.domains.const import UUID
+from dataclasses import dataclass
 
 
 @dataclass
 class BondAggregate:
     name: str
     isin: str
-    id: UUID = field(default_factory=UUID)
+    # sometime zero sales, dont have price
+    price: float | None
+    coupon_amount: float

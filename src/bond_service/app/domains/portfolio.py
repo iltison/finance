@@ -1,6 +1,7 @@
 import enum
 from dataclasses import dataclass, field
 from datetime import date
+from typing import Optional
 
 from app.domains.const import UUID
 
@@ -21,8 +22,13 @@ class BondOperationEntity:
 
 @dataclass
 class BondEntity:
-    bond_isin: str
     id: UUID = field(default_factory=UUID)
+    name: Optional[str] = None
+    bond_isin: Optional[str] = None
+    # текущая цена облигации
+    current_price: Optional[float] = None
+    profit: float = 0
+
     operations: list[BondOperationEntity] = field(default_factory=list)
 
 
@@ -38,6 +44,12 @@ class PortfolioAggregate:
         :return:
         """
         self.bonds.append(bond)
+
+    def find_bond_by_isin(self, isin: str):
+        for bond in self.bonds:
+            if bond.bond_isin == isin:
+                return bond
+        return None
 
     def add_bond_operation(
         self, bond_id: UUID, operation: BondOperationEntity

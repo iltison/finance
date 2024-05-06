@@ -52,7 +52,6 @@ portfolio_bonds_table = sa.Table(
     sa.Column(
         "bond_isin",
         sa.String,
-        sa.ForeignKey("bonds.isin", ondelete="CASCADE"),
         comment="Идентификатор облигации",
     ),
     sa.Column(

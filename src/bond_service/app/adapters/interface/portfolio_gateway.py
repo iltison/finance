@@ -4,8 +4,14 @@ from app.domains.const import UUID
 from app.domains.portfolio import PortfolioAggregate
 
 
-class PortfolioDAOInterface(Protocol):
-    async def get_by_id(self, id: UUID) -> PortfolioAggregate | None: ...
+class PortfolioGatewayInterface(Protocol):
+    async def __aenter__(self) -> "PortfolioGatewayInterface": ...
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None: ...
+
+    async def get_portfolio_by_id(
+        self, id: UUID
+    ) -> PortfolioAggregate | None: ...
 
     async def get_all(self) -> list[PortfolioAggregate]: ...
 

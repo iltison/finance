@@ -6,8 +6,7 @@ import structlog
 from dishka import AsyncContainer
 from mimesis import Schema
 
-from app.adapters.interface.portfolio_dao import PortfolioDAOInterface
-from app.adapters.interface.unit_of_work import UOWInterface
+from app.adapters.interface.portfolio_gateway import PortfolioGatewayInterface
 from app.domains.portfolio import PortfolioAggregate
 from tests.plugins.domain_factory.interface import PortfolioFactoryInterface
 
@@ -36,12 +35,11 @@ async def portfolio_builder(
     async def builder(
         **fields: Unpack[PortfolioAggregate],
     ) -> PortfolioAggregate:
-        uow = await container.get(UOWInterface)
-        repo = await container.get(PortfolioDAOInterface)
+        gateway = await container.get(PortfolioGatewayInterface)
 
         portfolio_entity = portfolio_factory(**fields)
-        async with uow:
-            await repo.add(portfolio_entity)
+        async with gateway as gateway:
+            await gateway.add(portfolio_entity)
 
             logger.debug(
                 "Added test portfolio",

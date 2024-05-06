@@ -9,14 +9,13 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from app.adapters.interface.bond_dao import BondDAOInterface
-from app.adapters.interface.portfolio_dao import PortfolioDAOInterface
-from app.adapters.interface.unit_of_work import UOWInterface
-from app.adapters.postgres.dao.bond_dao import BondDAO
-from app.adapters.postgres.dao.portfolio_dao import PortfolioDAO
-from app.adapters.postgres.dao.unit_of_work import PostgresUOW
+from app.adapters.dao.portfolio_dao import PortfolioGateway
+from app.adapters.interface.portfolio_gateway import PortfolioGatewayInterface
 from app.applications.commands.create_bond import CreateBondService
 from app.applications.commands.create_operation import CreateOperationService
+from app.applications.queries.get_portfolio_info import (
+    GetPortfolioInformationService,
+)
 from app.configs.config import get_db_config
 
 logger = structlog.get_logger(__name__)
@@ -26,12 +25,12 @@ logger = structlog.get_logger(__name__)
 class AdaptersProvider(Provider):
     scope = Scope.REQUEST
 
-    uow = provide(PostgresUOW, provides=UOWInterface)
-
-    portfolio_dao = provide(PortfolioDAO, provides=PortfolioDAOInterface)
-    bond_dao = provide(BondDAO, provides=BondDAOInterface)
+    portfolio_gateway = provide(
+        PortfolioGateway, provides=PortfolioGatewayInterface
+    )
     create_bond_service = provide(CreateBondService)
     create_operation_service = provide(CreateOperationService)
+    get_portfolio_information_service = provide(GetPortfolioInformationService)
 
     @provide
     async def build_sa_sessionmaker(
