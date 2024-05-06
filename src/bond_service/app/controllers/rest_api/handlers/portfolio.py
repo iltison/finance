@@ -34,10 +34,15 @@ async def get_portfolio_information(
     for bond in result.payload.bonds:
         portfolio.bonds.append(
             PortfolioInfoBondResponse(
+                bond_id=bond.id,
                 isin=bond.bond_isin,
                 name=bond.name,
                 current_price=bond.current_price,
-                current_amount=0,
+                current_amount=bond.current_amount,
+                count=bond.count,
+                profit=round(bond.profit, 4),
+                coupon_profit=round(bond.coupon_profit, 4),
+                diff_amount_price=round(bond.diff_amount_price, 4),
             )
         )
     return portfolio

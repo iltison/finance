@@ -24,6 +24,9 @@ class PortfolioGateway:
         portfolio = await self.__get_by_id_from_database(id)
         if portfolio:
             await self.__get_moex_info(portfolio)
+
+            portfolio.calc()
+
         return portfolio
 
     async def add(self, entity: PortfolioAggregate):
