@@ -37,6 +37,12 @@ class CreateBondService:
             if portfolio is None:
                 portfolio = PortfolioAggregate(id=command.portfolio_id)
 
+            # check if bond exist
+            if portfolio.find_bond_by_isin(command.isin):
+                logger.info("Bond exist")
+                error = ServiceError("Bond exist")
+                return CommandCreateBondResult().failed(exception=error)
+
             bond = BondEntity(bond_isin=command.isin)
             portfolio.add_bond(bond)
             await gateway.update(portfolio)

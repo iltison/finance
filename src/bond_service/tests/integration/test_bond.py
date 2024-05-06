@@ -68,3 +68,20 @@ async def test_create_bond_without_portfolio(
     )
     assert response is not None
     assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_create_duplicate_bond(
+    test_client: AsyncClient,
+    bond_builder: BondBuilderInterface,
+    portfolio_builder: PortfolioBuilderInterface,
+):
+    bond = await bond_builder()
+    portfolio = await portfolio_builder(bonds=[bond])
+
+    response = await test_client.post(
+        f"/portfolios/{str(portfolio.id)}/bonds",
+        json={"isin": bond.bond_isin},
+    )
+    assert response is not None
+    assert response.status_code == 409
