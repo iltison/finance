@@ -24,6 +24,9 @@ lint.select = [
    "I", # isort
 ]
 
+[lint.per-file-ignores]
+"src/bond_service/tests/**" = ["ARG001"]
+"src/portfolio_service/tests/**" = ["ARG001"]
 
 [lint.isort]
 known-first-party = ["app", "tests"]

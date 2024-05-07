@@ -11,11 +11,11 @@ class WebConfig:
 
 @dataclass
 class DBConfig:
-    host: str = "localhost"
-    port: int = 5432
-    database: str = "portfolio"
-    login: str = "postgres"
-    password: str = "postgres"
+    host: str
+    port: int
+    database: str
+    login: str
+    password: str
 
 
 def get_web_config() -> WebConfig:
@@ -23,7 +23,11 @@ def get_web_config() -> WebConfig:
 
 
 def get_db_config() -> DBConfig:
-    config = DBConfig()
-    database = os.getenv("DB_DATABASE", config.database)
-    config.database = database
+    config = DBConfig(
+        host=os.getenv("DB_HOST", "localhost"),
+        port=os.getenv("DB_PORT", 5432),
+        database=os.getenv("DB_DATABASE", "portfolio"),
+        login=os.getenv("DB_LOGIN", "postgres"),
+        password=os.getenv("DB_PASSWORD", "postgres"),
+    )
     return config

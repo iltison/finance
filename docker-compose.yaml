@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  postgres:
+  postgres-test:
     image: postgres
     command: postgres -c 'max_connections=1000'
     environment:
@@ -18,11 +18,29 @@ services:
       retries: 5
       timeout: 5s
     ports:
-      - "5432:5432"
+      - "5400:5432"
     volumes:
-      - ./docker-multiple-databases.sh:/docker-entrypoint-initdb.d/docker-multiple-databases.sh:ro
+      - ./docker/docker-multiple-test-databases.sh:/docker-entrypoint-initdb.d/docker-multiple-databases.sh:ro
     tmpfs:
       - /var/lib/postgresql/data:rw # Necessary to speed up integration tests.
 
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_MULTIPLE_DATABASES: bond,portfolio
+    healthcheck:
+      test: pg_isready --username "postgres" --dbname "bond"
+      interval: 1s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - ./docker/docker-multiple-databases.sh:/docker-entrypoint-initdb.d/docker-multiple-databases.sh:ro
+    ports:
+      - "5432:5432"
+
 volumes:
     postgres:
+
+    postgres-test:
