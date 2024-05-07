@@ -18,14 +18,22 @@ from tests.integrations.utils.provider import TestAdaptersProvider
 logger = structlog.get_logger(__name__)
 
 
-@pytest.fixture(scope="module", autouse=True)
-def migration():
+@pytest.fixture(scope="session", autouse=True)
+def set_test_db_config():
+    """
+    Установка тестового окружения
+    :return:
+    """
+    os.environ["DB_DATABASE"] = get_reference_name_database()
+    os.environ["DB_PORT"] = "5400"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def migration(set_test_db_config):
     """
     Накатывание последней версии миграции на тестовую базу
     :return:
     """
-    os.environ["DB_DATABASE"] = get_reference_name_database()
-
     alembic_cfg = AlembicConfig("alembic.ini")
     upgrade(alembic_cfg, "head")
 
