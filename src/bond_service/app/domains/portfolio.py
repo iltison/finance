@@ -24,6 +24,7 @@ class BondOperationEntity:
 @dataclass
 class BondEntity:
     id: UUID = field(default_factory=UUID)
+    portfolio_id: Optional[UUID] = None
     name: Optional[str] = None
     bond_isin: Optional[str] = None
     # текущая цена облигации. Цены может не быть

@@ -2,11 +2,11 @@ from typing import Optional
 
 import aiohttp
 import structlog
-from sqlalchemy import select
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domains.const import UUID
-from app.domains.portfolio import PortfolioAggregate
+from app.domains.portfolio import BondEntity, PortfolioAggregate
 
 logger = structlog.get_logger(__name__)
 
@@ -30,18 +30,63 @@ class PortfolioGateway:
         return portfolio
 
     async def add(self, entity: PortfolioAggregate):
-        self.__session.add(entity)
+        if len(entity.bonds) == 0:
+            return
+        statement: str = """
+                INSERT INTO bonds (id, portfolio_id, bond_isin)
+                VALUES (:id, :portfolio_id, :bond_isin)
+                """
+        values = [
+            {
+                "id": bond.id,
+                "portfolio_id": entity.id,
+                "bond_isin": bond.bond_isin,
+            }
+            for bond in entity.bonds
+        ]
+
+        await self.__session.execute(text(statement), values)
 
     async def update(self, entity: PortfolioAggregate):
-        await self.__session.merge(entity)
+        if len(entity.bonds) == 0:
+            return
+        statement: str = """
+        INSERT INTO bonds (id, portfolio_id, bond_isin)
+        VALUES (:id, :portfolio_id, :bond_isin)
+        ON CONFLICT (id) DO NOTHING"""
+
+        values = [
+            {
+                "id": bond.id,
+                "portfolio_id": entity.id,
+                "bond_isin": bond.bond_isin,
+            }
+            for bond in entity.bonds
+        ]
+
+        await self.__session.execute(text(statement), values)
 
     async def __get_by_id_from_database(
         self, id: UUID
     ) -> PortfolioAggregate | None:
-        query = select(PortfolioAggregate).where(PortfolioAggregate.id == id)
-        result = await self.__session.execute(query)
-        result = result.scalars().first()
-        return result
+        portfolio = PortfolioAggregate(id=id)
+        statement: str = """
+                SELECT id, portfolio_id, bond_isin
+                FROM bonds
+                WHERE portfolio_id = :id
+                """
+
+        result = await self.__session.execute(text(statement), {"id": id})
+        for bond in result:
+            portfolio.bonds.append(
+                BondEntity(
+                    id=bond[0],
+                    portfolio_id=bond[1],
+                    bond_isin=bond[2],
+                )
+            )
+
+        return portfolio
 
     async def __get_moex_info(self, portfolio: PortfolioAggregate):
         url = "http://iss.moex.com/iss/engines/stock/markets/bonds/securities.json"
